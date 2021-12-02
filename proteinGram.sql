@@ -1,28 +1,33 @@
 --Drop old schema
 
-DROP TABLE IF EXISTS account;
-DROP TABLE IF EXISTS images;
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS messages;
-DROP TABLE IF EXISTS moderator;
-DROP TABLE IF EXISTS administrator;
-DROP TABLE IF EXISTS relationship;
-DROP TABLE IF EXISTS friend_request;
-DROP TABLE IF EXISTS groups;
-DROP TABLE IF EXISTS groupmember;
-DROP TABLE IF EXISTS groupowner;
-DROP TABLE IF EXISTS post;
-DROP TABLE IF EXISTS comment;
-DROP TABLE IF EXISTS like_post;
-DROP TABLE IF EXISTS like_comment;
-DROP TABLE IF EXISTS comment_tag;
-DROP TABLE IF EXISTS notifications;
-DROP TABLE IF EXISTS notification_like_post;
-DROP TABLE IF EXISTS notification_like_comment;
-DROP TABLE IF EXISTS notification_comment;
-DROP TABLE IF EXISTS notification_post;
 
+DROP TABLE IF EXISTS messages CASCADE;
+DROP TABLE IF EXISTS moderator CASCADE;
+DROP TABLE IF EXISTS administrator CASCADE;
+DROP TABLE IF EXISTS relationship CASCADE;
+DROP TABLE IF EXISTS friend_request CASCADE;
+DROP TABLE IF EXISTS groupmember CASCADE;
+DROP TABLE IF EXISTS groupowner CASCADE;
+DROP TABLE IF EXISTS like_post CASCADE;
+DROP TABLE IF EXISTS like_comment CASCADE;
+DROP TABLE IF EXISTS comment_tag CASCADE;
+DROP TABLE IF EXISTS notifications CASCADE;
+DROP TABLE IF EXISTS notification_like_post CASCADE;
+DROP TABLE IF EXISTS notification_like_comment CASCADE;
+DROP TABLE IF EXISTS notification_comment CASCADE;
+DROP TABLE IF EXISTS notification_post CASCADE;
+DROP TABLE IF EXISTS comment CASCADE;
+DROP TABLE IF EXISTS images CASCADE;
+DROP TABLE IF EXISTS groups CASCADE;
+DROP TABLE IF EXISTS post CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS account CASCADE;
+DROP TYPE IF EXISTS like_type CASCADE;
 
+DROP FUNCTION IF EXISTS group_search_update CASCADE;
+DROP FUNCTION IF EXISTS like_post_dup CASCADE;
+DROP FUNCTION IF EXISTS add_like_post_notification CASCADE;
+DROP FUNCTION IF EXISTS befriending CASCADE;
 --Types:
 
 CREATE TYPE like_type AS ENUM ('BUMP_FIST', 'LIKE', 'FLEXING', 'WEIGHTS', 'EGG');
@@ -51,8 +56,8 @@ CREATE TABLE users(
 
 CREATE TABLE messages(
     id SERIAL PRIMARY KEY,
-    idsender INTEGER REFERENCES account(id) ON UPDATE CASCADE PRIMARY KEY ,
-    idreceiver INTEGER REFERENCES acount(id) ON UPDATE CASCADE PRIMARY KEY,
+    idsender INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+    idreceiver INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
     texts TEXT NOT NULL,
     dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
@@ -67,34 +72,38 @@ CREATE TABLE administrator(
 );
 
 CREATE TABLE relationship(
-    id1 INTEGER REFERENCES account(id) ON UPDATE CASCADE PRIMARY KEY,
-    id2 INTEGER REFERENCES account(id) ON UPDATE CASCADE PRIMARY KEY,
+    id1 INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+    id2 INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
     friends BOOLEAN,
     user1_block BOOLEAN,
-    user2_block BOOLEAN
+    user2_block BOOLEAN,
+	PRIMARY KEY (id1 , id2)
 );
 
 CREATE TABLE friend_request( 
-    id1 INTEGER REFERENCES account(id) ON UPDATE CASCADE PRIMARY KEY,
-    id2 INTEGER REFERENCES account(id)ON UPDATE CASCADE PRIMARY KEY
+    id1 INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+    id2 INTEGER REFERENCES account(id)ON UPDATE CASCADE ,
+	PRIMARY KEY (id1 , id2)
 );
 
 CREATE TABLE groups(
     id SERIAL PRIMARY KEY,
     names TEXT NOT NULL,
     creationdate TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    group_profile_picture INTEGER REFERENCES image(id) ON UPDATE CASCADE,
+    group_profile_picture INTEGER REFERENCES images(id) ON UPDATE CASCADE,
     is_private_group BOOLEAN
 );
 
 CREATE TABLE groupmember(
-    idgroup INTEGER REFERENCES groups(id) ON UPDATE CASCADE PRIMARY KEY,
-    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE PRIMARY KEY
+    idgroup INTEGER REFERENCES groups(id) ON UPDATE CASCADE ,
+    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+	PRIMARY KEY (idgroup , iduser)
 );
 
 CREATE TABLE groupowner(
-    idgroup INTEGER REFERENCES groups(id) ON UPDATE CASCADE PRIMARY KEY,
-    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE PRIMARY KEY
+    idgroup INTEGER REFERENCES groups(id) ON UPDATE CASCADE ,
+    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+	PRIMARY KEY ( idgroup , iduser)
 );
 
 CREATE TABLE post(
@@ -116,21 +125,24 @@ CREATE TABLE comment(
 
 
 CREATE TABLE like_post(
-    idpost INTEGER REFERENCES post(id) ON UPDATE CASCADE PRIMARY KEY,
-    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE PRIMARY KEY,
-    TYPE like_type NOT NULL
+    idpost INTEGER REFERENCES post(id) ON UPDATE CASCADE ,
+    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+    TYPE like_type NOT NULL,
+	PRIMARY KEY ( idpost , iduser)
 );
 
 CREATE TABLE like_comment(
-    idcomment INTEGER REFERENCES comment(id) ON UPDATE CASCADE PRIMARY KEY,
-    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE PRIMARY KEY,
-    TYPE like_type NOT NULL
-)
+    idcomment INTEGER REFERENCES comment(id) ON UPDATE CASCADE ,
+    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+    TYPE like_type NOT NULL,
+	PRIMARY KEY ( idcomment , iduser)
+);
 
 CREATE TABLE comment_tag(
-    idcomment INTEGER REFERENCES comment(id) ON UPDATE CASCADE PRIMARY KEY,
-    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE PRIMARY KEY
-)
+    idcomment INTEGER REFERENCES comment(id) ON UPDATE CASCADE ,
+    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+	PRIMARY KEY ( idcomment , iduser)
+);
 
 CREATE TABLE notifications(
     id SERIAL PRIMARY KEY,
@@ -164,7 +176,15 @@ CREATE TABLE notification_post(
 
 -- Indexes
 
-ALTER TABLE user ADD COLUMN tsvectors TSVECTOR;
+CREATE INDEX user_post ON post USING btree (idposter);
+CLUSTER post USING user_post;
+
+CREATE INDEX group_members_idx ON groupmember USING hash (idgroup);
+
+CREATE INDEX user_notifications ON notifications USING btree (iduser);
+CLUSTER notifications USING user_notifications;
+
+ALTER TABLE groups ADD COLUMN tsvectors TSVECTOR;
 
 CREATE FUNCTION group_search_update() RETURNS TRIGGER AS $$
 BEGIN
@@ -185,11 +205,11 @@ END $$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER group_search_update
-  BEFORE INSERT OR UPDATE ON group
+  BEFORE INSERT OR UPDATE ON groups
   FOR EACH ROW
   EXECUTE PROCEDURE group_search_update();
 
-CREATE INDEX search_group_idx ON group USING GIN (tsvectors);
+CREATE INDEX search_group_idx ON groups USING GIN (tsvectors);
 
 
 ------- Triggers
@@ -198,7 +218,7 @@ CREATE FUNCTION like_post_dup() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     IF EXISTS (SELECT * FROM like_post WHERE NEW.idpost = idpost AND NEW.iduser = iduser) THEN
-        RAISE EXCEPTION 'Cannot like a post more than once.'
+        RAISE EXCEPTION 'Cannot like a post more than once.';
     END IF;
     RETURN NEW;
 END
@@ -212,16 +232,18 @@ CREATE TRIGGER like_post_dup
 
 
 CREATE FUNCTION add_like_post_notification() RETURNS TRIGGER AS
-$BODY
+$BODY$
 
-    INSERT INTO notifications VALUES(
-    SELECT post.idposter FROM post JOIN like_post ON post.id = like_post.idpos
-    WHERE post.idpost = NEW.idpost;);
+BEGIN
+    INSERT INTO notifications(iduser)
+	SELECT post.idposter FROM post INNER JOIN like_post ON post.id = like_post.idpost
+    WHERE post.idpost = NEW.idpost;
 
-    INSERT INTO notification_like_post VALUES (SELECT MAX(id) FROM notifications,
-    NEW.idpost, NEW.iduser);
-
-$BODY
+    INSERT INTO notification_like_post 
+	SELECT MAX(id) FROM notifications,
+    NEW.idpost, NEW.iduser;
+END
+$BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER add_like_post_notification
@@ -230,7 +252,7 @@ CREATE TRIGGER add_like_post_notification
 
 
 CREATE FUNCTION befriending() RETURNS TRIGGER AS
-$BODY
+$BODY$
 BEGIN
     IF EXISTS(SELECT * FROM friend_request WHERE NEW.id1 = id2 AND NEW.id2 = id1) 
     THEN
@@ -240,71 +262,13 @@ BEGIN
     END IF;
     RETURN NEW;
 
-
-$BODY
+END
+$BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER befriending
     AFTER INSERT ON friend_request
     FOR EACH ROW
     EXECUTE PROCEDURE befriending();
-
-
---- Transactions
-
------- TRANS01
-
-BEGIN TRANSACTION
-
-SET TRANSACTION ISOLATION LEVEL SERIALIZABLE READ ONLY;
-
---Quantity of members
-SELECT COUNT(*)
-FROM 
-    (
-    SELECT iduser FROM groupmember WHERE idgroup = $idgroup
-    UNION
-    SELECT iduser FROM groupmember WHERE idgroup = $idgroup;
-    );
-
---All users that interact with the group
-SELECT groupmember.iduser, name FROM groupmember INNER JOIN users ON groupmember.iduser = users.id 
-WHERE groupmember.idgroup = $idgroup
-UNION
-SELECT groupowner.iduser, name FROM groupmember INNER JOIN users ON groupmember.iduser = users.id 
-WHERE groupowner.idgroup = $idgroup;
-
-END TRANSACTION;
-
-
--------- TRANS02
-
-BEGIN TRANSACTION
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
---Insert group
-INSERT INTO groups (names, creationdate, group_profile_picture,is_private_group)
-    VALUES ($names, $creationdate, $group_profile_picture, $is_private_group);
-
---Insert groupOwner
-INSERT INTO groupOwner (idgroup, iduser)
-    VALUES (currval ('groups_id_seq'), $iduser );
-
-END TRANSACTION;
-
-
-------- TRANS03
-BEGIN TRANSACTION
-
-SET TRANSACTION ISOLATION LEVEL SERIALIZABLE READ ONLY;
-
-SELECT images.imageblob
-FROM users INNER JOIN images
-ON users.profile_picture = images.id
-WHERE user.name = $username;
-
-END TRANSACTION;
-
 
 
