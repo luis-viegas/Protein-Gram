@@ -125,6 +125,7 @@ paths:
                 - email
                 - password
 
+
       responses:
         '302':
           description: 'Redirect after processing the new user information.'
