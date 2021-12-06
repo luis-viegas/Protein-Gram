@@ -1,8 +1,9 @@
-FROM ubuntu:20.04
+FROM ubuntu:21.10
 
 # Install dependencies
+env DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends libpq-dev vim nginx php7.4-fpm php7.4-mbstring php7.4-xml php7.4-pgsql
+RUN apt-get install -y --no-install-recommends libpq-dev vim nginx php8.0-fpm php8.0-mbstring php8.0-xml php8.0-pgsql
 
 # Copy project code and install project dependencies
 COPY . /var/www/
@@ -12,7 +13,7 @@ RUN chown -R www-data:www-data /var/www/
 COPY ./etc/php/php.ini /usr/local/etc/php/conf.d/php.ini
 COPY ./etc/nginx/default.conf /etc/nginx/sites-enabled/default
 #COPY ./etc/docker/daemon.json /etc/docker/daemon.json
-COPY .env_production /var/www/.env
+COPY .env /var/www/.env
 COPY docker_run.sh /docker_run.sh
 
 # Start command
