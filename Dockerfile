@@ -6,8 +6,7 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends libpq-dev vim nginx php8.0-fpm php8.0-mbstring php8.0-xml php8.0-pgsql
 
 # Copy project code and install project dependencies
-COPY . /var/www/
-RUN chown -R www-data:www-data /var/www/
+COPY --chown=www-data . /var/www/
 
 # Copy project configurations
 COPY ./etc/php/php.ini /usr/local/etc/php/conf.d/php.ini

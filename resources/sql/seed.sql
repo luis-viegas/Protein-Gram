@@ -1,29 +1,29 @@
---Drop old schema
-
-
-DROP TABLE IF EXISTS messages CASCADE;
-DROP TABLE IF EXISTS moderator CASCADE;
-DROP TABLE IF EXISTS administrator CASCADE;
-DROP TABLE IF EXISTS relationship CASCADE;
-DROP TABLE IF EXISTS friend_request CASCADE;
-DROP TABLE IF EXISTS groupmember CASCADE;
-DROP TABLE IF EXISTS groupowner CASCADE;
-DROP TABLE IF EXISTS like_post CASCADE;
-DROP TABLE IF EXISTS like_comment CASCADE;
-DROP TABLE IF EXISTS comment_tag CASCADE;
-DROP TABLE IF EXISTS notifications CASCADE;
-DROP TABLE IF EXISTS notification_like_post CASCADE;
-DROP TABLE IF EXISTS notification_like_comment CASCADE;
-DROP TABLE IF EXISTS notification_comment CASCADE;
-DROP TABLE IF EXISTS notification_post CASCADE;
-DROP TABLE IF EXISTS comment CASCADE;
-DROP TABLE IF EXISTS images CASCADE;
-DROP TABLE IF EXISTS groups CASCADE;
-DROP TABLE IF EXISTS post CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS account CASCADE;
+DROP SCHEMA IF EXISTS lbaw2141 CASCADE;
+CREATE SCHEMA lbaw2141;
+/*
+DROP TABLE IF EXISTS lbaw2141.messages CASCADE;
+DROP TABLE IF EXISTS lbaw2141.moderator CASCADE;
+DROP TABLE IF EXISTS lbaw2141.administrator CASCADE;
+DROP TABLE IF EXISTS lbaw2141.relationship CASCADE;
+DROP TABLE IF EXISTS lbaw2141.friend_request CASCADE;
+DROP TABLE IF EXISTS lbaw2141.groupmember CASCADE;
+DROP TABLE IF EXISTS lbaw2141.groupowner CASCADE;
+DROP TABLE IF EXISTS lbaw2141.like_post CASCADE;
+DROP TABLE IF EXISTS lbaw2141.like_comment CASCADE;
+DROP TABLE IF EXISTS lbaw2141.comment_tag CASCADE;
+DROP TABLE IF EXISTS lbaw2141.notifications CASCADE;
+DROP TABLE IF EXISTS lbaw2141.notification_like_post CASCADE;
+DROP TABLE IF EXISTS lbaw2141.notification_like_comment CASCADE;
+DROP TABLE IF EXISTS lbaw2141.notification_comment CASCADE;
+DROP TABLE IF EXISTS lbaw2141.notification_post CASCADE;
+DROP TABLE IF EXISTS lbaw2141.comment CASCADE;
+DROP TABLE IF EXISTS lbaw2141.images CASCADE;
+DROP TABLE IF EXISTS lbaw2141.groups CASCADE;
+DROP TABLE IF EXISTS lbaw2141.post CASCADE;
+DROP TABLE IF EXISTS lbaw2141.users CASCADE;
+DROP TABLE IF EXISTS lbaw2141.account CASCADE;
+*/
 DROP TYPE IF EXISTS like_type CASCADE;
-
 DROP FUNCTION IF EXISTS group_search_update CASCADE;
 DROP FUNCTION IF EXISTS like_post_dup CASCADE;
 DROP FUNCTION IF EXISTS add_like_post_notification CASCADE;
@@ -34,18 +34,18 @@ CREATE TYPE like_type AS ENUM ('BUMP_FIST', 'LIKE', 'FLEXING', 'WEIGHTS', 'EGG')
 
 --Tables:
 
-CREATE TABLE account(
+CREATE TABLE lbaw2141.account(
     id SERIAL PRIMARY KEY,
     password_hash TEXT NOT NULL 
 );
 
 
-CREATE TABLE images(
+CREATE TABLE lbaw2141.images(
     id SERIAL PRIMARY KEY,
     imageblob TEXT NOT NULL
 );
 
-CREATE TABLE users(
+CREATE TABLE lbaw2141.users(
     id INTEGER REFERENCES account (id) PRIMARY KEY,
     name TEXT NOT NULL,
     birthday TIMESTAMP WITH TIME ZONE,
@@ -54,7 +54,7 @@ CREATE TABLE users(
 );
 
 
-CREATE TABLE messages(
+CREATE TABLE lbaw2141.messages(
     id SERIAL PRIMARY KEY,
     idsender INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
     idreceiver INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
@@ -62,16 +62,16 @@ CREATE TABLE messages(
     dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
-CREATE TABLE moderator(
+CREATE TABLE lbaw2141.moderator(
     id INTEGER REFERENCES account(id) ON UPDATE CASCADE PRIMARY KEY
 );
 
 
-CREATE TABLE administrator(
+CREATE TABLE lbaw2141.administrator(
     id INTEGER REFERENCES account(id) ON UPDATE CASCADE PRIMARY KEY
 );
 
-CREATE TABLE relationship(
+CREATE TABLE lbaw2141.relationship(
     id1 INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
     id2 INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
     friends BOOLEAN,
@@ -80,13 +80,13 @@ CREATE TABLE relationship(
 	PRIMARY KEY (id1 , id2)
 );
 
-CREATE TABLE friend_request( 
+CREATE TABLE lbaw2141.friend_request( 
     id1 INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
     id2 INTEGER REFERENCES account(id)ON UPDATE CASCADE ,
 	PRIMARY KEY (id1 , id2)
 );
 
-CREATE TABLE groups(
+CREATE TABLE lbaw2141.groups(
     id SERIAL PRIMARY KEY,
     names TEXT NOT NULL,
     creationdate TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
@@ -94,19 +94,19 @@ CREATE TABLE groups(
     is_private_group BOOLEAN
 );
 
-CREATE TABLE groupmember(
+CREATE TABLE lbaw2141.groupmember(
     idgroup INTEGER REFERENCES groups(id) ON UPDATE CASCADE ,
     iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
 	PRIMARY KEY (idgroup , iduser)
 );
 
-CREATE TABLE groupowner(
+CREATE TABLE lbaw2141.groupowner(
     idgroup INTEGER REFERENCES groups(id) ON UPDATE CASCADE ,
     iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
 	PRIMARY KEY ( idgroup , iduser)
 );
 
-CREATE TABLE post(
+CREATE TABLE lbaw2141.post(
     id SERIAL PRIMARY KEY,
     idposter INTEGER REFERENCES account(id) ON UPDATE CASCADE NOT NULL,
     idgroup INTEGER  REFERENCES groups(id),
@@ -114,7 +114,7 @@ CREATE TABLE post(
     dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
-CREATE TABLE comment(
+CREATE TABLE lbaw2141.comment(
     id SERIAL PRIMARY KEY,
     iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE NOT NULL,
     idpost INTEGER REFERENCES post(id) ON UPDATE CASCADE NOT NULL,
@@ -124,50 +124,50 @@ CREATE TABLE comment(
 );
 
 
-CREATE TABLE like_post(
+CREATE TABLE lbaw2141.like_post(
     idpost INTEGER REFERENCES post(id) ON UPDATE CASCADE ,
     iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
     TYPE like_type NOT NULL,
 	PRIMARY KEY ( idpost , iduser)
 );
 
-CREATE TABLE like_comment(
+CREATE TABLE lbaw2141.like_comment(
     idcomment INTEGER REFERENCES comment(id) ON UPDATE CASCADE ,
     iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
     TYPE like_type NOT NULL,
 	PRIMARY KEY ( idcomment , iduser)
 );
 
-CREATE TABLE comment_tag(
+CREATE TABLE lbaw2141.comment_tag(
     idcomment INTEGER REFERENCES comment(id) ON UPDATE CASCADE ,
     iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
 	PRIMARY KEY ( idcomment , iduser)
 );
 
-CREATE TABLE notifications(
+CREATE TABLE lbaw2141.notifications(
     id SERIAL PRIMARY KEY,
     iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE NOT NULL,
     dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
-CREATE TABLE notification_comment(
+CREATE TABLE lbaw2141.notification_comment(
     idnotification INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
     idcomment INTEGER REFERENCES comment(id) ON UPDATE CASCADE NOT NULL
 );
 
-CREATE TABLE notification_like_post(
+CREATE TABLE lbaw2141.notification_like_post(
     idnotification INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
     idpost INTEGER REFERENCES post(id) ON UPDATE CASCADE NOT NULL,
     iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE NOT NULL
 );
 
-CREATE TABLE notification_like_comment(
+CREATE TABLE lbaw2141.notification_like_comment(
     idnotification INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
     idpost INTEGER REFERENCES comment(id) ON UPDATE CASCADE NOT NULL,
     iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE NOT NULL
 );
 
-CREATE TABLE notification_post(
+CREATE TABLE lbaw2141.notification_post(
     idnotification INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
     idpost INTEGER REFERENCES post(id) ON UPDATE CASCADE NOT NULL
 );
@@ -176,15 +176,15 @@ CREATE TABLE notification_post(
 
 -- Indexes
 
-CREATE INDEX user_post ON post USING btree (idposter);
+CREATE INDEX user_post ON lbaw2141.post USING btree (idposter);
 CLUSTER post USING user_post;
 
-CREATE INDEX group_members_idx ON groupmember USING hash (idgroup);
+CREATE INDEX groups_with_user_idx ON lbaw2141.groupmember USING btree (iduser);
 
-CREATE INDEX user_notifications ON notifications USING btree (iduser);
+CREATE INDEX user_notifications ON lbaw2141.notifications USING btree (iduser);
 CLUSTER notifications USING user_notifications;
 
-ALTER TABLE groups ADD COLUMN tsvectors TSVECTOR;
+ALTER TABLE lbaw2141.groups ADD COLUMN tsvectors TSVECTOR;
 
 CREATE FUNCTION group_search_update() RETURNS TRIGGER AS $$
 BEGIN
@@ -205,11 +205,11 @@ END $$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER group_search_update
-  BEFORE INSERT OR UPDATE ON groups
+  BEFORE INSERT OR UPDATE ON lbaw2141.groups
   FOR EACH ROW
   EXECUTE PROCEDURE group_search_update();
 
-CREATE INDEX search_group_idx ON groups USING GIN (tsvectors);
+CREATE INDEX search_group_idx ON lbaw2141.groups USING GIN (tsvectors);
 
 
 ------- Triggers
@@ -226,7 +226,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER like_post_dup
-    BEFORE INSERT OR UPDATE ON like_post
+    BEFORE INSERT OR UPDATE ON lbaw2141.like_post
     FOR EACH ROW
     EXECUTE PROCEDURE like_post_dup();
 
