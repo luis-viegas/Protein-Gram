@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model
+{
+    public $timestamps = false;
+
+    public function poster()
+    {
+        return $this->belongsTo(User::class,'idposter','id','poster');
+    }
+
+    public function group() //TODO: check if null is fine.
+    {
+        return $this->belongsTo(Group::class,'idgroup','id','group');
+    }
+
+    public function likes()
+    {
+        return $this->belongsToMany(User::class,'like_post','idpost','iduser');
+    }
+    /*
+    public function notification()
+    {
+        return $this->hasMany(NotificationPost::class,'idpost');
+    }
+    */
+}

@@ -36,7 +36,7 @@ CREATE TYPE like_type AS ENUM ('BUMP_FIST', 'LIKE', 'FLEXING', 'WEIGHTS', 'EGG')
 
 CREATE TABLE lbaw2141.account(
     id SERIAL PRIMARY KEY,
-    password_hash TEXT NOT NULL 
+    password_hash TEXT NOT NULL -- Binary format?
 );
 
 
@@ -48,7 +48,7 @@ CREATE TABLE lbaw2141.images(
 CREATE TABLE lbaw2141.users(
     id INTEGER REFERENCES account (id) PRIMARY KEY,
     name TEXT NOT NULL,
-    birthday TIMESTAMP WITH TIME ZONE,
+    birthday TIMESTAMP WITH TIME ZONE, -- date?
     profile_picture INTEGER REFERENCES images(id) ON UPDATE CASCADE,
     is_private_profile BOOLEAN NOT NULL
 );
@@ -58,7 +58,7 @@ CREATE TABLE lbaw2141.messages(
     id SERIAL PRIMARY KEY,
     idsender INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
     idreceiver INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
-    texts TEXT NOT NULL,
+    messagetext TEXT NOT NULL,
     dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
@@ -74,15 +74,14 @@ CREATE TABLE lbaw2141.administrator(
 CREATE TABLE lbaw2141.relationship(
     id1 INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
     id2 INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
-    friends BOOLEAN,
-    user1_block BOOLEAN,
-    user2_block BOOLEAN,
+    friends BOOLEAN, -- TODO: trigger to make the id2,id1 entry the same on update.
+    blocked BOOLEAN DEFAULT FALSE,
 	PRIMARY KEY (id1 , id2)
 );
 
 CREATE TABLE lbaw2141.friend_request( 
     id1 INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
-    id2 INTEGER REFERENCES account(id)ON UPDATE CASCADE ,
+    id2 INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
 	PRIMARY KEY (id1 , id2)
 );
 
@@ -163,7 +162,7 @@ CREATE TABLE lbaw2141.notification_like_post(
 
 CREATE TABLE lbaw2141.notification_like_comment(
     idnotification INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
-    idpost INTEGER REFERENCES comment(id) ON UPDATE CASCADE NOT NULL,
+    idcomment INTEGER REFERENCES comment(id) ON UPDATE CASCADE NOT NULL,
     iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE NOT NULL
 );
 
