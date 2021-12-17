@@ -10,6 +10,6 @@ class Administrator extends Model
     public $timestamps = false;
     public function account()
     {
-        return $this->hasOne(Account::class,'id');
+        return $this->belongsTo(Account::class,'id');
     }
 }
