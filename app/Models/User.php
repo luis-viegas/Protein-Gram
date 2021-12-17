@@ -38,27 +38,37 @@ class User extends Authenticatable
 
     public function memberOfGroups()
     {
-        return $this->belongsToMany(Group::class,'groupmember','iduser','idgroup');
+        return $this->belongsToMany(Group::class,'group_members','iduser','idgroup','id','id');
     }
     
     public function ownerOfGroups()
     {
-        return $this->belongsToMany(Group::class,'groupowner','iduser','idgroup');
+        return $this->belongsToMany(Group::class,'group_owners','iduser','idgroup','id','id');
     }
     
     public function relationship()
     {
-        return $this->belongsToMany(User::class,'relationship','id1','id2');
+        return $this->belongsToMany(User::class,'relationships','id1','id2','id','id');
     }
 
     public function friendRequest()
     {
-        return $this->belongsToMany(User::class,'friend_request','id1','id2'); //TODO: check for opposite direction.
+        return $this->belongsToMany(User::class,'friend_requests','id1','id2','id','id'); //TODO: check for opposite direction.
     }
 
     public function posts()
     {
         return $this->hasMany(Post::class,'idposter','id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class,'iduser','id');
+    }
+
+    public function commentsTaggedIn()
+    {
+        return $this->belongsToMany(Comment::class,'comment_tags','iduser','idcomment','id','id');
     }
 
     public function notifications()
@@ -68,10 +78,14 @@ class User extends Authenticatable
 
     public function likedComments()
     {
-        return $this->belongsToMany(Comment::class,'like_comment','iduser','idcomment');
+        return $this->belongsToMany(Comment::class,'comment_likes','iduser','idcomment','id','id');
     }
     public function likedPosts()
     {
-        return $this->belongsToMany(Post::class,'like_post','iduser','idpost');
+        return $this->belongsToMany(Post::class,'post_likes','iduser','idpost','id','id');
+    }
+    public function profilePicture()
+    {
+        return $this->belongsToOne(Image::class,'profile_picture','id');
     }
 }

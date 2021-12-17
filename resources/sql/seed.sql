@@ -2,31 +2,31 @@ DROP SCHEMA IF EXISTS lbaw2141 CASCADE;
 CREATE SCHEMA lbaw2141;
 /*
 DROP TABLE IF EXISTS lbaw2141.messages CASCADE;
-DROP TABLE IF EXISTS lbaw2141.moderator CASCADE;
-DROP TABLE IF EXISTS lbaw2141.administrator CASCADE;
-DROP TABLE IF EXISTS lbaw2141.relationship CASCADE;
-DROP TABLE IF EXISTS lbaw2141.friend_request CASCADE;
-DROP TABLE IF EXISTS lbaw2141.groupmember CASCADE;
-DROP TABLE IF EXISTS lbaw2141.groupowner CASCADE;
-DROP TABLE IF EXISTS lbaw2141.like_post CASCADE;
-DROP TABLE IF EXISTS lbaw2141.like_comment CASCADE;
-DROP TABLE IF EXISTS lbaw2141.comment_tag CASCADE;
+DROP TABLE IF EXISTS lbaw2141.moderators CASCADE;
+DROP TABLE IF EXISTS lbaw2141.administrators CASCADE;
+DROP TABLE IF EXISTS lbaw2141.relationships CASCADE;
+DROP TABLE IF EXISTS lbaw2141.friend_requests CASCADE;
+DROP TABLE IF EXISTS lbaw2141.group_members CASCADE;
+DROP TABLE IF EXISTS lbaw2141.group_owners CASCADE;
+DROP TABLE IF EXISTS lbaw2141.post_likes CASCADE;
+DROP TABLE IF EXISTS lbaw2141.comment_likes CASCADE;
+DROP TABLE IF EXISTS lbaw2141.comment_tags CASCADE;
 DROP TABLE IF EXISTS lbaw2141.notifications CASCADE;
-DROP TABLE IF EXISTS lbaw2141.notification_like_post CASCADE;
-DROP TABLE IF EXISTS lbaw2141.notification_like_comment CASCADE;
-DROP TABLE IF EXISTS lbaw2141.notification_comment CASCADE;
-DROP TABLE IF EXISTS lbaw2141.notification_post CASCADE;
-DROP TABLE IF EXISTS lbaw2141.comment CASCADE;
+DROP TABLE IF EXISTS lbaw2141.notifications_post_like CASCADE;
+DROP TABLE IF EXISTS lbaw2141.notifications_comment_like CASCADE;
+DROP TABLE IF EXISTS lbaw2141.notifications_comment CASCADE;
+DROP TABLE IF EXISTS lbaw2141.notifications_post CASCADE;
+DROP TABLE IF EXISTS lbaw2141.comments CASCADE;
 DROP TABLE IF EXISTS lbaw2141.images CASCADE;
 DROP TABLE IF EXISTS lbaw2141.groups CASCADE;
-DROP TABLE IF EXISTS lbaw2141.post CASCADE;
+DROP TABLE IF EXISTS lbaw2141.posts CASCADE;
 DROP TABLE IF EXISTS lbaw2141.users CASCADE;
-DROP TABLE IF EXISTS lbaw2141.account CASCADE;
+DROP TABLE IF EXISTS lbaw2141.accounts CASCADE;
 */
 DROP TYPE IF EXISTS like_type CASCADE;
 DROP FUNCTION IF EXISTS group_search_update CASCADE;
-DROP FUNCTION IF EXISTS like_post_dup CASCADE;
-DROP FUNCTION IF EXISTS add_like_post_notification CASCADE;
+DROP FUNCTION IF EXISTS post_likes_dup CASCADE;
+DROP FUNCTION IF EXISTS add_post_like_notification CASCADE;
 DROP FUNCTION IF EXISTS befriending CASCADE;
 --Types:
 
@@ -34,7 +34,7 @@ CREATE TYPE like_type AS ENUM ('BUMP_FIST', 'LIKE', 'FLEXING', 'WEIGHTS', 'EGG')
 
 --Tables:
 
-CREATE TABLE lbaw2141.account(
+CREATE TABLE lbaw2141.accounts(
     id SERIAL PRIMARY KEY,
     password_hash TEXT NOT NULL -- Binary format?
 );
@@ -46,7 +46,7 @@ CREATE TABLE lbaw2141.images(
 );
 
 CREATE TABLE lbaw2141.users(
-    id INTEGER REFERENCES account (id) PRIMARY KEY,
+    id INTEGER REFERENCES accounts (id) PRIMARY KEY,
     name TEXT NOT NULL,
     birthday TIMESTAMP WITH TIME ZONE, -- date?
     profile_picture INTEGER REFERENCES images(id) ON UPDATE CASCADE,
@@ -56,32 +56,32 @@ CREATE TABLE lbaw2141.users(
 
 CREATE TABLE lbaw2141.messages(
     id SERIAL PRIMARY KEY,
-    idsender INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
-    idreceiver INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+    idsender INTEGER REFERENCES accounts(id) ON UPDATE CASCADE ,
+    idreceiver INTEGER REFERENCES accounts(id) ON UPDATE CASCADE ,
     messagetext TEXT NOT NULL,
     dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
-CREATE TABLE lbaw2141.moderator(
-    id INTEGER REFERENCES account(id) ON UPDATE CASCADE PRIMARY KEY
+CREATE TABLE lbaw2141.moderators(
+    id INTEGER REFERENCES accounts(id) ON UPDATE CASCADE PRIMARY KEY
 );
 
 
-CREATE TABLE lbaw2141.administrator(
-    id INTEGER REFERENCES account(id) ON UPDATE CASCADE PRIMARY KEY
+CREATE TABLE lbaw2141.administrators(
+    id INTEGER REFERENCES accounts(id) ON UPDATE CASCADE PRIMARY KEY
 );
 
-CREATE TABLE lbaw2141.relationship(
-    id1 INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
-    id2 INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+CREATE TABLE lbaw2141.relationships(
+    id1 INTEGER REFERENCES accounts(id) ON UPDATE CASCADE ,
+    id2 INTEGER REFERENCES accounts(id) ON UPDATE CASCADE ,
     friends BOOLEAN, -- TODO: trigger to make the id2,id1 entry the same on update.
     blocked BOOLEAN DEFAULT FALSE,
 	PRIMARY KEY (id1 , id2)
 );
 
-CREATE TABLE lbaw2141.friend_request( 
-    id1 INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
-    id2 INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+CREATE TABLE lbaw2141.friend_requests( 
+    id1 INTEGER REFERENCES accounts(id) ON UPDATE CASCADE ,
+    id2 INTEGER REFERENCES accounts(id) ON UPDATE CASCADE ,
 	PRIMARY KEY (id1 , id2)
 );
 
@@ -93,92 +93,92 @@ CREATE TABLE lbaw2141.groups(
     is_private_group BOOLEAN
 );
 
-CREATE TABLE lbaw2141.groupmember(
+CREATE TABLE lbaw2141.group_members(
     idgroup INTEGER REFERENCES groups(id) ON UPDATE CASCADE ,
-    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+    iduser INTEGER REFERENCES accounts(id) ON UPDATE CASCADE ,
 	PRIMARY KEY (idgroup , iduser)
 );
 
-CREATE TABLE lbaw2141.groupowner(
+CREATE TABLE lbaw2141.group_owners(
     idgroup INTEGER REFERENCES groups(id) ON UPDATE CASCADE ,
-    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+    iduser INTEGER REFERENCES accounts(id) ON UPDATE CASCADE ,
 	PRIMARY KEY ( idgroup , iduser)
 );
 
-CREATE TABLE lbaw2141.post(
+CREATE TABLE lbaw2141.posts(
     id SERIAL PRIMARY KEY,
-    idposter INTEGER REFERENCES account(id) ON UPDATE CASCADE NOT NULL,
+    idposter INTEGER REFERENCES accounts(id) ON UPDATE CASCADE NOT NULL,
     idgroup INTEGER  REFERENCES groups(id),
     messages TEXT NOT NULL,
     dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
-CREATE TABLE lbaw2141.comment(
+CREATE TABLE lbaw2141.comments(
     id SERIAL PRIMARY KEY,
-    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE NOT NULL,
-    idpost INTEGER REFERENCES post(id) ON UPDATE CASCADE NOT NULL,
-    reply_to INTEGER REFERENCES comment(id) ON UPDATE CASCADE,
+    iduser INTEGER REFERENCES accounts(id) ON UPDATE CASCADE NOT NULL,
+    idpost INTEGER REFERENCES posts(id) ON UPDATE CASCADE NOT NULL,
+    reply_to INTEGER REFERENCES comments(id) ON UPDATE CASCADE,
     messages TEXT NOT NULL,
     dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
 
-CREATE TABLE lbaw2141.like_post(
-    idpost INTEGER REFERENCES post(id) ON UPDATE CASCADE ,
-    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+CREATE TABLE lbaw2141.post_likes(
+    idpost INTEGER REFERENCES posts(id) ON UPDATE CASCADE ,
+    iduser INTEGER REFERENCES accounts(id) ON UPDATE CASCADE ,
     TYPE like_type NOT NULL,
 	PRIMARY KEY ( idpost , iduser)
 );
 
-CREATE TABLE lbaw2141.like_comment(
-    idcomment INTEGER REFERENCES comment(id) ON UPDATE CASCADE ,
-    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+CREATE TABLE lbaw2141.comment_likes(
+    idcomment INTEGER REFERENCES comments(id) ON UPDATE CASCADE ,
+    iduser INTEGER REFERENCES accounts(id) ON UPDATE CASCADE ,
     TYPE like_type NOT NULL,
 	PRIMARY KEY ( idcomment , iduser)
 );
 
-CREATE TABLE lbaw2141.comment_tag(
-    idcomment INTEGER REFERENCES comment(id) ON UPDATE CASCADE ,
-    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE ,
+CREATE TABLE lbaw2141.comment_tags(
+    idcomment INTEGER REFERENCES comments(id) ON UPDATE CASCADE ,
+    iduser INTEGER REFERENCES accounts(id) ON UPDATE CASCADE ,
 	PRIMARY KEY ( idcomment , iduser)
 );
 
 CREATE TABLE lbaw2141.notifications(
     id SERIAL PRIMARY KEY,
-    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE NOT NULL,
+    iduser INTEGER REFERENCES accounts(id) ON UPDATE CASCADE NOT NULL,
     dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
-CREATE TABLE lbaw2141.notification_comment(
+CREATE TABLE lbaw2141.notifications_comment(
     idnotification INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
-    idcomment INTEGER REFERENCES comment(id) ON UPDATE CASCADE NOT NULL
+    idcomment INTEGER REFERENCES comments(id) ON UPDATE CASCADE NOT NULL
 );
 
-CREATE TABLE lbaw2141.notification_like_post(
+CREATE TABLE lbaw2141.notifications_post_like(
     idnotification INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
-    idpost INTEGER REFERENCES post(id) ON UPDATE CASCADE NOT NULL,
-    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE NOT NULL
+    idpost INTEGER REFERENCES posts(id) ON UPDATE CASCADE NOT NULL,
+    iduser INTEGER REFERENCES accounts(id) ON UPDATE CASCADE NOT NULL
 );
 
-CREATE TABLE lbaw2141.notification_like_comment(
+CREATE TABLE lbaw2141.notifications_comment_like(
     idnotification INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
-    idcomment INTEGER REFERENCES comment(id) ON UPDATE CASCADE NOT NULL,
-    iduser INTEGER REFERENCES account(id) ON UPDATE CASCADE NOT NULL
+    idcomment INTEGER REFERENCES comments(id) ON UPDATE CASCADE NOT NULL,
+    iduser INTEGER REFERENCES accounts(id) ON UPDATE CASCADE NOT NULL
 );
 
-CREATE TABLE lbaw2141.notification_post(
+CREATE TABLE lbaw2141.notifications_post(
     idnotification INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
-    idpost INTEGER REFERENCES post(id) ON UPDATE CASCADE NOT NULL
+    idpost INTEGER REFERENCES posts(id) ON UPDATE CASCADE NOT NULL
 );
 
 
 
 -- Indexes
 
-CREATE INDEX user_post ON lbaw2141.post USING btree (idposter);
-CLUSTER post USING user_post;
+CREATE INDEX user_posts ON lbaw2141.posts USING btree (idposter);
+CLUSTER posts USING user_posts;
 
-CREATE INDEX groups_with_user_idx ON lbaw2141.groupmember USING btree (iduser);
+CREATE INDEX groups_with_user_idx ON lbaw2141.group_members USING btree (iduser);
 
 CREATE INDEX user_notifications ON lbaw2141.notifications USING btree (iduser);
 CLUSTER notifications USING user_notifications;
@@ -213,10 +213,10 @@ CREATE INDEX search_group_idx ON lbaw2141.groups USING GIN (tsvectors);
 
 ------- Triggers
 
-CREATE FUNCTION like_post_dup() RETURNS TRIGGER AS
+CREATE FUNCTION post_likes_dup() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM like_post WHERE NEW.idpost = idpost AND NEW.iduser = iduser) THEN
+    IF EXISTS (SELECT * FROM post_likes WHERE NEW.idpost = idpost AND NEW.iduser = iduser) THEN
         RAISE EXCEPTION 'Cannot like a post more than once.';
     END IF;
     RETURN NEW;
@@ -224,40 +224,40 @@ END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER like_post_dup
-    BEFORE INSERT OR UPDATE ON lbaw2141.like_post
+CREATE TRIGGER post_likes_dup
+    BEFORE INSERT OR UPDATE ON lbaw2141.post_likes
     FOR EACH ROW
-    EXECUTE PROCEDURE like_post_dup();
+    EXECUTE PROCEDURE post_likes_dup();
 
 
-CREATE FUNCTION add_like_post_notification() RETURNS TRIGGER AS
+CREATE FUNCTION add_post_like_notification() RETURNS TRIGGER AS
 $BODY$
 
 BEGIN
     INSERT INTO notifications(iduser)
-	SELECT post.idposter FROM post INNER JOIN like_post ON post.id = like_post.idpost
-    WHERE post.idpost = NEW.idpost;
+	SELECT posts.idposter FROM posts INNER JOIN post_likes ON posts.id = post_likes.idpost
+    WHERE posts.idpost = NEW.idpost;
 
-    INSERT INTO notification_like_post 
+    INSERT INTO notifications_post_like 
 	SELECT MAX(id) FROM notifications,
     NEW.idpost, NEW.iduser;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER add_like_post_notification
-    AFTER INSERT ON like_post
-    EXECUTE PROCEDURE add_like_post_notification();
+CREATE TRIGGER add_post_like_notification
+    AFTER INSERT ON post_likes
+    EXECUTE PROCEDURE add_post_like_notification();
 
 
 CREATE FUNCTION befriending() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS(SELECT * FROM friend_request WHERE NEW.id1 = id2 AND NEW.id2 = id1) 
+    IF EXISTS(SELECT * FROM friend_requests WHERE NEW.id1 = id2 AND NEW.id2 = id1) 
     THEN
-        INSERT INTO relationship VALUES (NEW.id1, NEW.id2, TRUE, FALSE, FALSE);
-        DELETE FROM friend_request WHERE id1 = NEW.id2 AND id2 = NEW.id1;
-        DELETE FROM friend_request WHERE id1 = NEW.id1 AND id2 = NEW.id2;
+        INSERT INTO relationships VALUES (NEW.id1, NEW.id2, TRUE, FALSE, FALSE);
+        DELETE FROM friend_requests WHERE id1 = NEW.id2 AND id2 = NEW.id1;
+        DELETE FROM friend_requests WHERE id1 = NEW.id1 AND id2 = NEW.id2;
     END IF;
     RETURN NEW;
 
@@ -266,7 +266,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER befriending
-    AFTER INSERT ON friend_request
+    AFTER INSERT ON friend_requests
     FOR EACH ROW
     EXECUTE PROCEDURE befriending();
 

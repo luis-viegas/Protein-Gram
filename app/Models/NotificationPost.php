@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class NotificationPost extends Model
 {
+    protected $table = 'notifications_post';
     public $timestamps = false;
 
     public function notification()

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class NotificationComment extends Model
 {
+    protected $table = 'notifications_comment';
     public $timestamps = false;
 
     public function notification()

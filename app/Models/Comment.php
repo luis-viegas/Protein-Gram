@@ -14,7 +14,7 @@ class Comment extends Model
         return $this->belongsTo(Post::class,'idpost','id');
     }
 
-    public function user()
+    public function commentor()
     {
         return $this->belongsTo(User::class,'iduser','id');
     }
@@ -24,8 +24,19 @@ class Comment extends Model
         return $this->belongsTo(Comment::class,'reply_to','id');
     }
 
+    public function replies()
+    {
+        return $this->hasMany(Comment::class,'reply_to','id');
+    }
+
     public function likes()
     {
-        return $this->belongsToMany(User::class,'like_comment','idcomment','iduser');
+        return $this->belongsToMany(User::class,'comment_likes','idcomment','iduser','id','id');
     }
+
+    public function taggingUsers()
+    {
+        return $this->belongsToMany(User::class, 'comment_tags','idcomment','iduser','id','id');
+    }
+
 }

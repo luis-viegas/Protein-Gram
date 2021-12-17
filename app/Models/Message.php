@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
     public $timestamps = false;
+    
     public function sender(){
-        return $this->hasOne(Account::class,'idsender');
+        return $this->belongsTo(Account::class,'idsender','id');
     }
+    
     public function receiver(){
-        return $this->hasOne(Account::class,'idreceiver');
+        return $this->belongsTo(Account::class,'idreceiver','id');
     }
 }
