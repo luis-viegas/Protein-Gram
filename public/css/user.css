@@ -1,0 +1,39 @@
+.user_grid {
+    display: grid;
+    grid-template-columns: 30% 70%;
+}
+
+.user_item {
+    height: fit-content;
+    padding: 7.5%;
+    margin: 40px 0;
+    position: sticky;
+    top: 0;
+    text-align: center;
+    border: 1px solid grey;
+    border-radius: 20px;
+    width: 90%;
+    margin-left: 5%;
+}
+
+#edit-own-admin{
+    display:none;
+}
+
+.user-profile-image{
+    margin: 0px !important;
+    width: 100%;
+    border-radius: 1%;
+    object-fit: cover;
+    margin-right: 15px;
+    max-height: 300px;
+
+}
+
+.user-field {
+    margin: 5% 0;
+}
+
+#create-post {
+    width: 79%;
+}

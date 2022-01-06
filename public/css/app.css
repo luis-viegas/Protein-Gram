@@ -1,0 +1,227 @@
+body {
+  background-color: #ffffff;
+  color: #4f96d8;
+  padding: 1em;
+}
+main > header {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  background-color: #93daf7;
+  padding: 1em;
+  margin: 0em;
+}
+main > header h1 {
+  margin: 0;
+}
+main > header a.button {
+  margin: 1em;
+  justify-self: center;
+}
+main > header span {
+  margin: 1em;
+  justify-self: center;
+}
+#cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+#cards article.card {
+  display: flex;
+  flex-direction: column;
+  background-color: #d3edc3;
+  padding: 1em;
+  margin: 1em;
+}
+#cards article.card header {
+  display: flex;
+  align-items: center;
+}
+#cards article.card header h2 {
+  flex-grow: 1;
+}
+#cards article.card header a.delete {
+  display: none;
+  font-size: 2.6rem;
+  margin-top: .5rem;
+  margin-bottom: 2.5rem;
+  line-height: 1.25;
+}
+#cards article.card header:hover a.delete {
+  display: inline;
+}
+#cards article.card li {
+  list-style-type: none;
+}
+#cards article.card li label {
+  display: flex;
+  align-items: baseline;
+}
+#cards article.card li label span {
+  margin-left: .5em;
+  flex-grow: 1;
+}
+#cards article.card li label a {
+  display: none;
+}
+#cards article.card li label:hover a {
+  display: inline;
+}
+#cards article.card input:checked + span {
+  text-decoration: var(--primary-color) solid line-through;
+}
+#cards article.card ul {
+  margin: 0;
+}
+#cards article.card form {
+  margin: 0;
+}
+#cards article.card input[type=text] {
+  background-color: white;
+  margin: 0;
+}
+#content label {
+  font-weight: normal;
+}
+#content > form {
+  margin: 0 auto;
+  padding: 1em;
+  max-width: 20em;
+  border: 1px solid #d2afe7;
+}
+#content > form .error {
+  font-weight: bold;
+  color: #ff3333;
+}
+#content > form input {
+  background-color: white;
+}
+@media (max-width: 70em) {
+  #cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  main > header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+  main > header h1 {
+    grid-row-end: span 2;
+  }
+}
+@media (max-width: 40em) {
+  #cards {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 25em) {
+  body {
+    margin: 0;
+  }
+  main > header {
+    margin: 0;
+    padding: 0.5em;
+  }
+  main > header span {
+    margin: 0;
+  }
+  #content form {
+    margin: 0;
+    max-width: 25em;
+  }
+  article.card {
+    margin: 0;
+    border-bottom: 1px solid rgba(96, 108, 118, 0.4);
+  }
+}
+/**
+ * Overide milligram colors
+ * Some styles might be missing
+ **/
+button {
+  background-color: #4f96d8;
+  border-color: #4f96d8;
+}
+a.button {
+  background-color: #4f96d8;
+  border-color: #4f96d8;
+}
+a.button.button-outline {
+  color: #4f96d8;
+}
+a {
+  color: #4f96d8;
+}
+input[type=text]:focus,
+input[type=email]:focus,
+input[type=password]:focus {
+  border-color: #4f96d8;
+}
+
+#delete-post-input {
+  display: none;
+}
+
+.search-bar-input {
+  background-color: #ffffff !important;
+  width: 75% !important;
+}
+
+#grid-menu {
+  min-height: 125px;
+  display: grid;
+  grid-template-columns: 30% 40% 30%;
+}
+
+#logo {
+  max-width: 100%;
+  margin-top: 4.5%;  
+}
+
+.grid-menu-item {
+  margin-top: 8%;  
+
+}
+
+#search-wrapper {
+  padding-left: 50px;
+
+}
+
+#search-form {
+  height: 100%;
+
+}
+
+#corner-grid {
+  display: grid;
+  grid-template-columns: auto 35% 20%;
+}
+
+#profile-icon {
+  object-fit: cover;
+  width: 70px;
+  border-radius: 50%;
+  min-height: 70px;
+  max-height: 70px;
+}
+
+#profile-icon-div {
+  grid-column: 3 / span 1;
+  text-align: center;
+}
+
+#logout-button {
+  text-align: center;
+  width: 70%;
+  grid-column: 2 / span 1;
+}
+
+#admin-button {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
+#login-register-div{
+  text-align: right;
+}
