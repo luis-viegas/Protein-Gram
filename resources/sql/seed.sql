@@ -2,8 +2,6 @@ create schema if not exists lbaw2141;
 
 DROP TABLE IF EXISTS lbaw2141.users CASCADE;
 DROP TABLE IF EXISTS lbaw2141.posts CASCADE;
-DROP TABLE IF EXISTS lbaw2141.cards CASCADE;
-DROP TABLE IF EXISTS lbaw2141.items CASCADE;
 
 DROP FUNCTION IF EXISTS users_search_update CASCADE;
 

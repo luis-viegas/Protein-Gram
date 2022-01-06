@@ -53,10 +53,7 @@ class UserController extends Controller
         $new_image = $request->input('image');
 
         if($new_image!=''){
-
-            if(getimagesize($new_image)){
-                $user-> image = $new_image;
-            }
+            $user-> image = $new_image;
         }
 
         $user-> bio = $request->input('bio');
