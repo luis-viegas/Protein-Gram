@@ -9,12 +9,35 @@ class Post extends Model
 {
     public $timestamps  = true;
 
-    protected $table = "posts";
+    /**
+     * The user who made this post
+     */
+    public function poster() {
+        return $this->belongsTo(User::class,'user_id','id','poster');
+    }
 
     /**
-     * The user this card belongs to
+     * The group this post was posted in, if it was posted in one
      */
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function group() //TODO: check if null is fine.
+    {
+        //if this->group_id == null return null;
+        return $this->belongsTo(Group::class,'group_id','id','group');
+    }
+
+    /**
+     * The likes the post has received
+     */
+    public function likes()
+    {
+        return $this->belongsToMany(User::class,'post_likes','post_id','user_id','id','id','likes');
+    }
+
+    /**
+     * The comments made on this post
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class,'post_id','id');
     }
 }

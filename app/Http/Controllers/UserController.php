@@ -13,6 +13,8 @@ class UserController extends Controller
     public function show($id){
 
         $user = User::find($id);
+        //if (user==null) return view( Invalid user)
+        //TODO: check if user exists.
         $posts = $user->posts()
                       ->join('users', 'posts.user_id', '=', 'users.id')
                       ->select('posts.*','users.name','users.image')
