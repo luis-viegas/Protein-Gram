@@ -1,9 +1,14 @@
-create schema if not exists lbaw2141;
+DROP SCHEMA IF EXISTS lbaw2141 CASCADE;
+CREATE SCHEMA lbaw2141;
 
-DROP TABLE IF EXISTS lbaw2141.users CASCADE;
-DROP TABLE IF EXISTS lbaw2141.posts CASCADE;
-
+DROP TYPE IF EXISTS like_type CASCADE;
+DROP FUNCTION IF EXISTS group_search_update CASCADE;
+DROP FUNCTION IF EXISTS post_likes_dup CASCADE;
+DROP FUNCTION IF EXISTS add_post_like_notification CASCADE;
+DROP FUNCTION IF EXISTS befriending CASCADE;
 DROP FUNCTION IF EXISTS users_search_update CASCADE;
+
+CREATE TYPE like_type AS ENUM ('BUMP_FIST', 'LIKE', 'FLEXING', 'WEIGHTS', 'EGG');
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -22,10 +27,161 @@ CREATE TABLE posts (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   text VARCHAR NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE,
-  updated_at TIMESTAMP WITH TIME ZONE
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() --TODO trigger on update
 );
 
+CREATE TABLE messages(
+  id SERIAL PRIMARY KEY,
+  idsender INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+  idreceiver INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+  messagetext TEXT NOT NULL,
+  dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+);
+
+CREATE TABLE relationships(
+  id1 INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+  id2 INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+  friends BOOLEAN, -- TODO: trigger to make the id2,id1 entry the same on update.
+  blocked BOOLEAN DEFAULT FALSE,
+	PRIMARY KEY (id1 , id2)
+);
+
+CREATE TABLE friend_requests( 
+  id1 INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+  id2 INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+	PRIMARY KEY (id1 , id2)
+);
+
+CREATE TABLE groups(
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  creationdate TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+  --group_profile_picture INTEGER REFERENCES images(id) ON UPDATE CASCADE,
+  is_private_group BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE group_members(
+  group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE ,
+  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+	PRIMARY KEY (group_id , user_id)
+);
+
+CREATE TABLE group_owners(
+  group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE ,
+  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+	PRIMARY KEY (group_id , user_id)
+);
+
+CREATE TABLE comments(
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE NOT NULL,
+  post_id INTEGER REFERENCES posts(id) ON UPDATE CASCADE NOT NULL,
+  reply_to INTEGER REFERENCES comments(id) ON UPDATE CASCADE,
+  message TEXT NOT NULL,
+  dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+);
+
+CREATE TABLE post_likes(
+  post_id INTEGER REFERENCES posts(id) ON UPDATE CASCADE ,
+  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+  TYPE like_type NOT NULL,
+	PRIMARY KEY (post_id , user_id)
+);
+
+CREATE TABLE comment_likes(
+  comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE ,
+  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+  TYPE like_type NOT NULL,
+	PRIMARY KEY ( comment_id , user_id)
+);
+
+CREATE TABLE comment_tags(
+  comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE ,
+  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+	PRIMARY KEY ( comment_id , user_id)
+);
+
+CREATE TABLE notifications(
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE NOT NULL,
+    dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+);
+
+CREATE TABLE notifications_comment(
+    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
+    comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE NOT NULL
+);
+
+CREATE TABLE notifications_post_like(
+    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
+    post_id INTEGER REFERENCES posts(id) ON UPDATE CASCADE NOT NULL,
+    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE NOT NULL
+);
+
+CREATE TABLE notifications_comment_like(
+    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
+    comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE NOT NULL,
+    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE NOT NULL
+);
+
+CREATE TABLE notifications_post(
+    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
+    post_id INTEGER REFERENCES posts(id) ON UPDATE CASCADE NOT NULL
+);
+
+
+
+
+-- Indexes
+
+CREATE INDEX user_posts ON posts USING btree (user_id);
+CLUSTER posts USING user_posts;
+
+CREATE INDEX groups_with_user_idx ON group_members USING btree (user_id);
+
+CREATE INDEX user_notifications ON notifications USING btree (user_id);
+CLUSTER notifications USING user_notifications;
+
+
+
+
+
+
+
+
+
+
+
+
+-- Text Search
+
+ALTER TABLE groups ADD COLUMN tsvectors TSVECTOR;
+
+CREATE FUNCTION group_search_update() RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    NEW.tsvectors = (
+      setweight(to_tsvector('simple', NEW.name), 'A')
+    );
+  END IF;
+  IF TG_OP = 'UPDATE' THEN
+      IF (NEW.name <> OLD.name) THEN
+        NEW.tsvectors = (
+          setweight(to_tsvector('simple', NEW.name), 'A')
+        );
+      END IF;
+  END IF;
+  RETURN NEW;
+END $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER group_search_update
+  BEFORE INSERT OR UPDATE ON groups
+  FOR EACH ROW
+  EXECUTE PROCEDURE group_search_update();
+
+CREATE INDEX search_group_idx ON groups USING GIN (tsvectors);
 
 ALTER TABLE users ADD COLUMN tsvectors TSVECTOR;
 
@@ -55,9 +211,52 @@ CREATE TRIGGER user_search_update
 CREATE INDEX users_search_idx ON users USING GIN (tsvectors);
 
 
+CREATE FUNCTION add_post_like_notification() RETURNS TRIGGER AS
+$BODY$
+
+BEGIN
+    INSERT INTO notifications(iduser)
+	SELECT posts.user_id FROM posts
+    WHERE posts.id = NEW.post_id;
+
+    INSERT INTO notifications_post_like 
+	SELECT MAX(id) FROM notifications,
+    NEW.post_id, NEW.user_id;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER add_post_like_notification
+    AFTER INSERT ON post_likes
+    EXECUTE PROCEDURE add_post_like_notification();
+
+
+CREATE FUNCTION befriending() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF EXISTS(SELECT * FROM friend_requests WHERE NEW.id1 = id2 AND NEW.id2 = id1) 
+    THEN
+        INSERT INTO relationships VALUES (NEW.id1, NEW.id2, TRUE, FALSE);
+        INSERT INTO relationships VALUES (NEW.id2, NEW.id1, TRUE, FALSE);
+        DELETE FROM friend_requests WHERE id1 = NEW.id2 AND id2 = NEW.id1;
+        DELETE FROM friend_requests WHERE id1 = NEW.id1 AND id2 = NEW.id2;
+    END IF;
+    RETURN NEW;
+
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER befriending
+    AFTER INSERT ON friend_requests
+    FOR EACH ROW
+    EXECUTE PROCEDURE befriending();
 
 
 
+
+
+-- Population 
 
 INSERT INTO users VALUES (
   DEFAULT,
@@ -79,3 +278,11 @@ INSERT INTO users VALUES (
 ); -- Password is 1234. Generated using Hash::make('1234')
 
 
+
+/* TODO: 
+
+CREATE TABLE images(
+    id SERIAL PRIMARY KEY,
+    imageblob TEXT NOT NULL
+);
+*/
