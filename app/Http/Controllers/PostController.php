@@ -20,11 +20,8 @@ class PostController extends Controller
 
     public function publicTimeline(){
 
-        $posts = DB::table('posts')
-                    ->join('users', 'posts.user_id', '=', 'users.id')
-                    ->select('posts.*','users.name','users.image')
-                    ->orderBy('id','desc')
-                    ->get();
+        $posts = Post::orderBy('id','desc')
+                      ->get();
         return view('pages.mainPage', ['posts'=>$posts]);
     }
 

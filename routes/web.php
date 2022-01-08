@@ -28,13 +28,15 @@ Route::post('posts/edit/{id}', 'PostController@update')->name('updatePost');
 Route::any('/search', 'SearchController@search');
 
 //User
-Route::put('users', 'UserController@create');
+//Route::put('users', 'UserController@create');
 Route::post('users/delete/{id}', 'UserController@delete')->name('deleteUser');
 Route::get('users/delete/{id}', 'UserController@deleteConfirmation');
 Route::post('users/edit/{id}', 'UserController@update')->name('editUser');
 Route::get('users/edit/{id}', 'UserController@updateForm');
 Route::get('users/{id}', 'UserController@show')->name('public_profile');  //view profile
 
+//Comment
+Route::post('posts/{id}/comments', 'CommentController@create')->name('create_comment');
 
 //Administration
 Route::get('administration','UserController@listAdministration');
