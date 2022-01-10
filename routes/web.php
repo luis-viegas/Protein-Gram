@@ -37,6 +37,7 @@ Route::get('users/{id}', 'UserController@show')->name('public_profile');  //view
 
 //Comment
 Route::post('posts/{id}/comments', 'CommentController@create')->name('create_comment');
+Route::post('posts/{post_id}/comments/{comment_id}/responses','CommentController@createResponse')->name('create_response');
 
 //Administration
 Route::get('administration','UserController@listAdministration');

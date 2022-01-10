@@ -45,4 +45,26 @@ class CommentController extends Controller
 
         return redirect()->back();
     }
+
+    public function createResponse($post_id,$comment_id, Request $request){
+        $comment = new Comment();
+
+        //authorize('create',$post_id);
+
+        if($request->input('message') == null){
+            return redirect()->back();
+        }
+
+        $comment->message = $request->input('message');
+        $comment->user_id = Auth::id();
+        $comment->post_id = $post_id;
+        $comment->reply_to = $comment_id;
+
+        $comment->save();
+
+        return redirect()->back();
+    }
+
+    
+
 }
