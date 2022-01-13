@@ -12,9 +12,9 @@ class User extends Authenticatable
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
 
-    /*protected $fillable = [
+    protected $fillable = [
         'name', 'email', 'password','is_private','bio',
-    ];*/
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
