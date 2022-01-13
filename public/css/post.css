@@ -29,6 +29,10 @@
     margin-right: 15px;
 }
 
+#comment_replies{
+    right: 5;
+}
+
 #post-username{
 
     float: left;
