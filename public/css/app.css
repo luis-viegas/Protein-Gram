@@ -1,13 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&family=Spartan&display=swap');
+
+
 body {
   background-color: #ffffff;
   color: #4f96d8;
-  padding: 1em;
+  margin: 0px;
+  font-family: 'Roboto', sans-serif;
 }
 main > header {
   display: grid;
   grid-template-columns: 1fr auto auto;
   align-items: center;
-  background-color: #93daf7;
+  background-color: #e5e5e5;
   padding: 1em;
   margin: 0em;
 }
@@ -22,6 +26,13 @@ main > header span {
   margin: 1em;
   justify-self: center;
 }
+
+.timeline {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
 #cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -87,7 +98,9 @@ main > header span {
   margin: 0 auto;
   padding: 1em;
   max-width: 20em;
-  border: 1px solid #d2afe7;
+  border: 1px solid grey;
+  border-radius: 10px;
+  color: #4357AD;
 }
 #content > form .error {
   font-weight: bold;
@@ -138,23 +151,23 @@ main > header span {
  * Some styles might be missing
  **/
 button {
-  background-color: #4f96d8;
-  border-color: #4f96d8;
+  background-color: #4357AD;
+  border-color: #4357AD;
 }
 a.button {
-  background-color: #4f96d8;
-  border-color: #4f96d8;
+  background-color: #4357AD;
+  border-color: #4357AD;
 }
 a.button.button-outline {
-  color: #4f96d8;
+  color: #4357AD;
 }
 a {
-  color: #4f96d8;
+  color: #4357AD;
 }
 input[type=text]:focus,
 input[type=email]:focus,
 input[type=password]:focus {
-  border-color: #4f96d8;
+  border-color: #4357AD;
 }
 
 #delete-post-input {
@@ -168,19 +181,28 @@ input[type=password]:focus {
 
 #grid-menu {
   min-height: 125px;
-  display: grid;
-  grid-template-columns: 30% 40% 30%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#logo-div a {
+  display: flex;
+  align-items: center;
+  color: black;
+  font-family: 'Spartan';
+  font-weight: bold;
+}
+
+#logo-div #PG-name {
+  padding-left: 10px;
 }
 
 #logo {
-  max-width: 100%;
-  margin-top: 4.5%;  
+  border-radius: 50%;
+  height: 100px;
 }
 
-.grid-menu-item {
-  margin-top: 8%;  
-
-}
 
 #search-wrapper {
   padding-left: 50px;
@@ -189,25 +211,72 @@ input[type=password]:focus {
 
 #search-form {
   height: 100%;
-
+  margin-bottom: 0;
 }
 
 #corner-grid {
-  display: grid;
-  grid-template-columns: auto 35% 20%;
+  display: flex;
+  align-items: center;
 }
 
 #profile-icon {
   object-fit: cover;
-  width: 70px;
   border-radius: 50%;
-  min-height: 70px;
-  max-height: 70px;
+  z-index: 100;
 }
 
 #profile-icon-div {
   grid-column: 3 / span 1;
   text-align: center;
+  height: auto;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 100px;
+}
+
+#profile-icon-link {
+  width: 50px;
+}
+
+.profile-menu {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  font-family: 'Spartan', sans-serif;
+  width: fit-content;
+  position: absolute;
+  top: 115px;
+  z-index: 100;
+}
+
+.profile-menu:after {
+  content: " ";
+  position: absolute;
+  right: 85px;
+  top: -15px;
+  border-top: none;
+  border-right: 15px solid transparent;
+  border-left: 15px solid transparent;
+  border-bottom: 15px solid white;
+}
+
+#profile-icon-div:hover #profile-menu{
+  display: flex !important;
+}
+
+.profile-menu a {
+  color: black;
+  margin: 10px;
+}
+
+.profile-menu a:hover {
+  color: #4357AD;
 }
 
 #logout-button {
@@ -216,12 +285,33 @@ input[type=password]:focus {
   grid-column: 2 / span 1;
 }
 
-#admin-button {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-}
-
 #login-register-div{
   text-align: right;
+}
+
+
+@media (max-width: 768px){
+  #logo-div {
+    min-width: 145px;
+    width: 30%;
+  }
+
+  #logo-div a {
+    width: 50%;
+  }
+
+  #logo {
+    height: auto;
+  }
+
+  .user_grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .user_item {
+    position: relative;
+    margin-left: 0;
+  }
 }

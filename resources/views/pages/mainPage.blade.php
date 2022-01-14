@@ -4,7 +4,7 @@
 
 @section('content')
 
-<section id="public timeline">
+<section class="timeline" id="public timeline">
   @foreach ($posts as $post )
     @if($post->poster->is_private==false)
     @include('partials.post', ['post'=> $post])

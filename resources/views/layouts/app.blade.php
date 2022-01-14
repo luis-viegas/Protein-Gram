@@ -26,8 +26,8 @@
     <main>
       <header>
         <div id="grid-menu">
-          <div>
-            <a href="{{ url('/') }}"><img id='logo' src="{{ asset('images/logo.png') }}" alt=""></a>
+          <div id="logo-div">
+            <a href="{{ url('/') }}"><img id='logo' src="{{ asset('images/PGLogo.png') }}" alt=""><div id="PG-name">Proteingram.</div></a>
           </div>
 
           <div class='grid-menu-item'> 
@@ -46,12 +46,22 @@
           <div class='grid-menu-item'>
             @if (Auth::check())
             <div id="corner-grid">
+            <div id="profile-icon-div">
+              <a id="profile-icon-link" href="{{ url('/users/'.Auth::user()->id) }}">
+                <img id='profile-icon' src={{Auth::user()->image}}>
+              </a>
+              
+              <div class="profile-menu" id="profile-menu">
+              <a id="logout-button" href="{{ url('/logout') }}"> LOGOUT </a>
+                <a href="{{ url('/users/edit/'.Auth::user()->id)}}"> SETTINGS </a>
               @if (Auth::user()->is_admin)
-                <a id="admin-button" class="button" href="{{url('/administration')}}"> Administration </a>
+                <a id="admin-button" href="{{url('/administration')}}"> ADMINISTRATION </a>
               @endif
-            <a id="logout-button" class="button" href="{{ url('/logout') }}"> Logout </a>
-            <div id="profile-icon-div"><a id="profile-icon-link" href="{{ url('/users/'.Auth::user()->id) }}"><img id='profile-icon' src={{Auth::user()->image}}></a></div>
+              </div>
+          </div>
+
             </div>
+            
             @endif
 
             @if (!Auth::check())

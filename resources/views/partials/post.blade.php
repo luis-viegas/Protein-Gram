@@ -2,15 +2,31 @@
     <div id="post-info">
         <img class="post-profile-image" src={{$post->poster->image}}>
         <a id="post-username" href="/users/{{ $post->user_id}}">{{$post->poster->name}}</a>
-        <div id="post-created">  Created at:{{ $post->created_at }} </div>
+        <div id="post-created">  {{ $post->created_at }} </div>
     </div>
 
     @if($post->updated_at!=$post->created_at)
-        <div id="post-updated">Modified at: {{$post->updated_at}} </div>
+        <div id="post-updated">{{$post->updated_at}} </div>
     @endif
-    <hr>
+  
     <div id="post-text"><p>{{$post->text}}</p></div>
     <hr>
+
+    <div id="post-comments">
+        @foreach ($post->comments as $comment )
+            @if($comment->reply_to==null)
+                @include('partials.comment', ['comment'=> $comment])
+            @endif
+        @endforeach
+        @if(Auth::check() )
+        <form class = "create-comment" method="post" action="{{route("create_comment",$post->id)}}">
+            @csrf
+            <input type="text" name="message" placeholder="new comment">
+            <input class="button" type="submit" value="New Comment">
+        </form>
+        @endif
+    </div>
+
 
     <div id="post-comments">
         @foreach ($post->comments as $comment )
