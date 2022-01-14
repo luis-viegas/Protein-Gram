@@ -22,14 +22,15 @@
             @if(Auth::id()==$user->id)
               <a id='create-post' class="button" href="{{ url('/posts/create')}}"> Create New Post</a>
             @endif
+
           @endif
         </div>
 
         <div class='posts_item'>
-          <section id="profile timeline">
-          @foreach ($posts as $post )
-          @include('partials.post', ['post'=> $post])
-          @endforeach
+            <section id="profile timeline">
+            @foreach ($posts as $post )
+            @include('partials.post', ['post'=> $post])
+            @endforeach
           </section>
         </div>
 

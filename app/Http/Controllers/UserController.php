@@ -19,7 +19,18 @@ class UserController extends Controller
                       ->orderBy('id','desc')
                       ->get();
 
-        return view('pages.user', ['user'=> $user, 'posts' => $posts]);
+        if($user->is_private==false){
+            return view('pages.user', ['user'=> $user, 'posts' => $posts]);
+        }
+        else if(Auth::check()){
+            if(Auth::user()->is_admin){
+                return view('pages.user', ['user'=> $user, 'posts' => $posts]);
+            }   
+        }
+        else{
+            return view('pages.private_user',['user'=>$user]);
+        }
+        
     }
 
     public function listAdministration(){
