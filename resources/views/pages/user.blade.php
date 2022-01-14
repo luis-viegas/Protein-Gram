@@ -22,6 +22,7 @@
             @if(Auth::id()==$user->id)
               <a id='create-post' class="button" href="{{ url('/posts/create')}}"> Create New Post</a>
             @endif
+
           @endif
         </div>
 

@@ -10,6 +10,22 @@
     @endif
   
     <div id="post-text"><p>{{$post->text}}</p></div>
+    <hr>
+
+    <div id="post-comments">
+        @foreach ($post->comments as $comment )
+            @if($comment->reply_to==null)
+                @include('partials.comment', ['comment'=> $comment])
+            @endif
+        @endforeach
+        @if(Auth::check() )
+        <form class = "create-comment" method="post" action="{{route("create_comment",$post->id)}}">
+            @csrf
+            <input type="text" name="message" placeholder="new comment">
+            <input class="button" type="submit" value="New Comment">
+        </form>
+        @endif
+    </div>
 
 
     <div id="post-comments">

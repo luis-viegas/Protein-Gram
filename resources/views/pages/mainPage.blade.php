@@ -6,7 +6,9 @@
 
 <section class="timeline" id="public timeline">
   @foreach ($posts as $post )
-  @include('partials.post', ['post'=> $post])
+    @if($post->poster->is_private==false)
+    @include('partials.post', ['post'=> $post])
+    @endif
   @endforeach
 </section>
 
