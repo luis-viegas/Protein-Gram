@@ -4,7 +4,7 @@
 
 @section('content')
 
-<section id="public timeline">
+<section class="timeline" id="public timeline">
   @foreach ($posts as $post )
   @include('partials.post', ['post'=> $post])
   @endforeach

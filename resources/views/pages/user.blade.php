@@ -26,7 +26,7 @@
         </div>
 
         <div class='posts_item'>
-          <section id="profile timeline">
+          <section class="profile-timeline" id="profile timeline">
           @foreach ($posts as $post )
           @include('partials.post', ['post'=> $post])
           @endforeach

@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Spartan&display=swap');
+
+
 .posts-item{
     display: flex;
     justify-content: flex-start;
@@ -13,11 +16,15 @@
     height: max-content;
     padding: 20px;
     margin: 40px;
+    color: black;
+    position: relative;
 }
 
 #post-info{
     height: 40px;
+    display: flex;
     align-items: center;
+    margin-bottom: 20px;
 }
 
 .post-profile-image{
@@ -29,14 +36,30 @@
     margin-right: 15px;
 }
 
-#post-username{
+#post-comments {
+    padding: 20px 0;
+    padding-top: 20px;
+}
 
+.comment_replies{
+    padding-left: 20px;
+}
+
+#post-username{
     float: left;
+    color: black;
+    font-family: 'Spartan', sans-serif;
+    font-weight: bold;
+}
+
+#post-username:hover {
+    color: grey;;
 }
 
 #post-created{
-    align-self: right;
-    float: right;
+    position: absolute;
+    right: 10px;
+    font-size: 12px;
 }
 
 #post-updated{
@@ -54,6 +77,14 @@
     width: 100%;
     margin: 0px;
     word-wrap: break-word;
+    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
+    padding: 20px 0;
+    vertical-align: middle;
+}
+
+#post-text p {
+    margin: 0;
 }
 
 #post-edit-button{
@@ -74,4 +105,36 @@ hr{
     height: 1px;
     background-color: black;
     border: none;
+}
+
+
+@media (max-width: 768px){
+
+    .user-profile-image {
+        width: 50%;
+    }
+
+    #post-info {
+        height: 65px;
+      }
+    
+      #post-created {
+        left: 20px;
+        top: 75px;
+      }
+
+      .posts_item {
+          width: 90%;;
+      }
+
+      .profile-timeline {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .post {
+          margin: 0;
+          width: 90%;
+      }
 }
