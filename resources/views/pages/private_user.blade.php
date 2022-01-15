@@ -13,6 +13,7 @@
           <h1 class="user-field">{{$user->name}}</h1>
           <h5 class="user-field"> {{$user->email}}</h5>
           <p class="user-field"> You don't have permission to see this profile</p>
+          
 
           @if(Auth::check())
           @if(Auth::user()->id != $user->id && !Auth::user()->friendRequestsMade->contains('id', $user->id) && !Auth::user()->relationships->contains('id', $user->id))
@@ -28,7 +29,7 @@
             <h5> You and {{$user->name}} are friends </h5>
           @endif
           @endif
-
+          
         </div>
 
       </div>

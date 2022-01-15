@@ -43,6 +43,7 @@ Route::post('posts/{post_id}/comments/{comment_id}/responses','CommentController
 Route::get('users/{id}/friends', 'UserController@friends')->name('friends');
 Route::post('users/{id}/friends/friend_requests','UserController@createFriendRequest')->name('create_friend_request');
 Route::post('users/{id}/friends/friend_requests/delete','UserController@removeFriendRequest')->name('remove_friend_request');
+Route::post('users/{id}/friends/delete','UserController@removeFriend')->name('remove_friend');
 
 
 //Administration

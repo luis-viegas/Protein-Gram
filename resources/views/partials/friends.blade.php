@@ -9,10 +9,21 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($friends as $user)
+                @foreach($friends as $friend)
                 <tr>
-                    <td><img class="post-profile-image" src={{$user->image}}><a href="/users/{{ $user->id }}">{{$user->name}}</a></td>
-                    <td>{{$user->email}}</td>
+                    <td><img class="post-profile-image" src={{$friend->image}}><a href="/users/{{ $friend->id }}">{{$friend->name}}</a></td>
+                    <td>{{$friend->email}}</td>
+                    @if(Auth::check())
+                    @if(Auth::user()->id == $user->id)
+                    <td>
+                        <form method="post" action="{{route('remove_friend', Auth::user()->id)}}">
+                            @csrf
+                            <input type="text" name="friend_request_id" value="{{$friend->id}}" hidden >
+                            <button type="submit" >Remove Friend </button>
+                        </form>
+                    </td>
+                    @endif
+                    @endif
                 </tr>
                 @endforeach
             </tbody>
