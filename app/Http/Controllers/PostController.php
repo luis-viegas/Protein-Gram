@@ -38,7 +38,7 @@ class PostController extends Controller
         $post->user_id = Auth::id();
 
         $post->save();
-        return redirect('users/'.$post->user_id);
+        return redirect('/');
     }
 
     public function update(Request $request, $id){
