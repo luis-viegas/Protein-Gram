@@ -6,29 +6,17 @@
     <section id='friends-page'>
 
         <div class="friends-list">
-            <div class="friend-overview">
-                <div class="friend-pfp">
-                    <img src="" alt="">
-                </div>
-                <div class="friend-name">
-
-                </div>
-
-            </div>
+            @isset($friends)
+                @include('partials.friends', ['friends'=>$friends ])    
+            @endisset
         </div>
 
+        <hr>
+
         <div class="friend-requests-list">
-            <div class="friend-request-overview">
-            <div class="friend-request-pfp">
-                    <img src="" alt="">
-                </div>
-                <div class="friend-request-name">
-
-                </div>
-
-                <button class="friend-request-confirm">CONFIRM</button>
-                <button class="friend-request-delete">DELETE</button>
-            </div>
+            @isset($friendRequests)
+                @include('partials.friendRequests', ['friendRequests'=>$friendRequests ])    
+            @endisset
         </div>
       
 

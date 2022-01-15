@@ -17,11 +17,24 @@
           <div class="user-short-links">
             <a class="user-groups">GROUPS</a>
             <a class="user-messages">MESSAGES</a>
-            <a class="user-friends">FRIENDS</a>
+            <a class="user-friends" href="/users/{{$user->id}}/friends">FRIENDS</a>
           </div>
 
           <div class="user-options">
             @if(Auth::check())
+              @if(Auth::user()->id != $user->id && !Auth::user()->friendRequestsMade->contains('id', $user->id) && !Auth::user()->relationships->contains('id', $user->id))
+              <form method="post" action="{{ route('create_friend_request',$user->id) }}">
+                @csrf
+                <button type="submit" > Add Friend </button>
+              </form>
+              @endif
+              @if(Auth::user()->friendRequestsMade->contains('id', $user->id))
+                <h5> You already asked this person to be your friend </h5>
+              @endif
+              @if(Auth::user()->relationships->contains('id', $user->id))
+                <h5> You and {{$user->name}} are friends </h5>
+              @endif
+
               @if(Auth::user()->is_admin || Auth::user()->id==$user->id)
                   <a class='button' href="{{ url('/users/edit/'.$user->id)}}"> Edit User </a>
                   <a class='button' href="{{ url('/users/delete/'.$user->id)}}"> Delete User </a>
@@ -33,7 +46,6 @@
             @endif
           </div>
 
-          
         </div>
 
         <div class='posts_item'>
