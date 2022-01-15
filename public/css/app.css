@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&family=Spartan&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&family=Spartan&display=swap");
 
 body {
   background-color: #ffffff;
   color: #4f96d8;
   margin: 0px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 main > header {
   display: grid;
@@ -54,7 +53,7 @@ main > header span {
 #cards article.card header a.delete {
   display: none;
   font-size: 2.6rem;
-  margin-top: .5rem;
+  margin-top: 0.5rem;
   margin-bottom: 2.5rem;
   line-height: 1.25;
 }
@@ -69,7 +68,7 @@ main > header span {
   align-items: baseline;
 }
 #cards article.card li label span {
-  margin-left: .5em;
+  margin-left: 0.5em;
   flex-grow: 1;
 }
 #cards article.card li label a {
@@ -87,7 +86,7 @@ main > header span {
 #cards article.card form {
   margin: 0;
 }
-#cards article.card input[type=text] {
+#cards article.card input[type="text"] {
   background-color: white;
   margin: 0;
 }
@@ -100,7 +99,7 @@ main > header span {
   max-width: 20em;
   border: 1px solid grey;
   border-radius: 10px;
-  color: #4357AD;
+  color: #4357ad;
 }
 #content > form .error {
   font-weight: bold;
@@ -151,23 +150,23 @@ main > header span {
  * Some styles might be missing
  **/
 button {
-  background-color: #4357AD;
-  border-color: #4357AD;
+  background-color: #4357ad;
+  border-color: #4357ad;
 }
 a.button {
-  background-color: #4357AD;
-  border-color: #4357AD;
+  background-color: #4357ad;
+  border-color: #4357ad;
 }
 a.button.button-outline {
-  color: #4357AD;
+  color: #4357ad;
 }
 a {
-  color: #4357AD;
+  color: #4357ad;
 }
-input[type=text]:focus,
-input[type=email]:focus,
-input[type=password]:focus {
-  border-color: #4357AD;
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #4357ad;
 }
 
 #delete-post-input {
@@ -190,7 +189,7 @@ input[type=password]:focus {
   display: flex;
   align-items: center;
   color: black;
-  font-family: 'Spartan';
+  font-family: "Spartan";
   font-weight: bold;
 }
 
@@ -203,10 +202,8 @@ input[type=password]:focus {
   height: 100px;
 }
 
-
 #search-wrapper {
   padding-left: 50px;
-
 }
 
 #search-form {
@@ -248,7 +245,7 @@ input[type=password]:focus {
   background-color: white;
   border-radius: 10px;
   padding: 10px;
-  font-family: 'Spartan', sans-serif;
+  font-family: "Spartan", sans-serif;
   width: fit-content;
   position: absolute;
   top: 115px;
@@ -266,7 +263,7 @@ input[type=password]:focus {
   border-bottom: 15px solid white;
 }
 
-#profile-icon-div:hover #profile-menu{
+#profile-icon-div:hover #profile-menu {
   display: flex !important;
 }
 
@@ -276,7 +273,7 @@ input[type=password]:focus {
 }
 
 .profile-menu a:hover {
-  color: #4357AD;
+  color: #4357ad;
 }
 
 #logout-button {
@@ -285,12 +282,11 @@ input[type=password]:focus {
   grid-column: 2 / span 1;
 }
 
-#login-register-div{
+#login-register-div {
   text-align: right;
 }
 
-
-@media (max-width: 768px){
+@media (max-width: 768px) {
   #logo-div {
     min-width: 145px;
     width: 30%;
@@ -314,4 +310,23 @@ input[type=password]:focus {
     position: relative;
     margin-left: 0;
   }
+}
+
+.invisible-button {
+  display: none;
+}
+
+.new-post {
+  display: inline;
+}
+
+.new-post form input {
+  flex: 1;
+  margin: 0 !important;
+}
+
+.new-post form {
+  display: flex;
+  margin: 0.75em 0 !important;
+  align-items: center;
 }
