@@ -20,7 +20,13 @@
                         <input type="text" name="friend_request_id" value="{{$friendRequest->id}}" hidden >
                         <button type="submit" >Delete </button>
                     </form>
+
+                    <form method="post" action="{{route('create_friend_request', $friendRequest->id)}}">
+                        @csrf
+                        <button type="submit" >Accept </button>
+                    </form>
                 </td>
+                
                 @endif
                 @endif
             </tr>
