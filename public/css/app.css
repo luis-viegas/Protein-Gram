@@ -289,6 +289,126 @@ input[type=password]:focus {
   text-align: right;
 }
 
+#friends-page .tabs{
+  display: flex;
+  justify-content: center;
+}
+
+#friends-list {
+  display: block;
+  padding: 20px;
+}
+
+#friend-requests-list {
+  display: none;
+  padding: 20px;
+}
+
+#friends-list-tab, #friend-requests-tab {
+  width: 50%;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+  color: black;
+}
+
+.active-tab {
+  background-color: #e5e5e5;
+}
+
+#friends-list-tab:hover, #friend-requests-tab:hover {
+  background-color: #e5e5e5;
+}
+
+#friends_list {
+  display: flex;
+}
+
+.friend-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  margin: 20px;
+  border-radius: 15px;
+  background-color: #efefef;
+  color: black;
+}
+
+.friend-card img{
+  margin: 0;
+  border-radius: 10px;
+  width: 80%;
+  height: 80px;
+}
+
+.friend-card a{
+  color: black;
+  font-family: 'Spartan', sans-serif;
+  padding: 10px 0;
+  font-weight: bold ;
+}
+
+.messages-page {
+  display: flex;
+}
+
+.contacts-list {
+  width: 30%;
+  max-height: 100vh;
+  overflow: scroll;
+  border-right: 1px solid grey;
+  font-family: "Spartan", sans-serif;
+}
+
+.message-history {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  max-height: 100vh;
+  overflow: scroll;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+}
+
+.contact {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid grey;
+  cursor: pointer;
+}
+
+.contact:hover {
+  background-color: #efefef;
+}
+
+.contact-name {
+  padding-left: 10px;
+}
+
+.contact img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+
+.message {
+  max-width: 60%;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: #e5e5e5;
+  margin: 10px;
+}
+
+.self {
+  align-self: end;
+  background-color: #4357AD;
+}
+
 
 @media (max-width: 768px){
   #logo-div {

@@ -16,7 +16,7 @@
 
           <div class="user-short-links">
             <a class="user-groups">GROUPS</a>
-            <a class="user-messages">MESSAGES</a>
+            <a class="user-messages" href="/users/{{$user->id}}/messages">MESSAGES</a>
             <a class="user-friends" href="/users/{{$user->id}}/friends">FRIENDS</a>
           </div>
 
