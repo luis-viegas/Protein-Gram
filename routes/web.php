@@ -39,6 +39,13 @@ Route::get('users/{id}', 'UserController@show')->name('public_profile');  //view
 Route::post('posts/{id}/comments', 'CommentController@create')->name('create_comment');
 Route::post('posts/{post_id}/comments/{comment_id}/responses','CommentController@createResponse')->name('create_response');
 
+//Friend Requests
+Route::get('users/{id}/friends', 'UserController@friends')->name('friends');
+Route::post('users/{id}/friends/friend_requests','UserController@createFriendRequest')->name('create_friend_request');
+Route::post('users/{id}/friends/friend_requests/delete','UserController@removeFriendRequest')->name('remove_friend_request');
+Route::post('users/{id}/friends/delete','UserController@removeFriend')->name('remove_friend');
+
+
 //Administration
 Route::get('administration','UserController@listAdministration');
 

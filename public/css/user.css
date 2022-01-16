@@ -10,8 +10,7 @@
     position: sticky;
     top: 0;
     text-align: center;
-    border: 1px solid grey;
-    border-radius: 20px;
+    border-right: 1px solid grey;
     width: 90%;
     margin-left: 5%;
     color: black;

@@ -26,8 +26,6 @@ class UserController extends Controller
             if(Auth::user()->is_admin){
                 return view('pages.user', ['user'=> $user, 'posts' => $posts]);
             }   
-        }
-        else{
             return view('pages.private_user',['user'=>$user]);
         }
         
@@ -96,8 +94,43 @@ class UserController extends Controller
         $this->authorize('delete',$user);
 
         return view('pages.deleteUser', ['user'=>$user]);
+
+        
     }
 
+    public function friends($id){
+        $user = User::find($id);
+
+        $friends = $user->relationships()->get();
+        $friendRequests = $user->friendRequestsReceived()->get();
+
+        return view('pages.friends',['user'=>$user, 'friends'=>$friends, 'friendRequests'=>$friendRequests]);
+    }
+
+
+    public function createFriendRequest($id){
+        $user = User::find($id);
+
+        $user->friendRequestsReceived()->attach(Auth::user()->id);
+        return redirect()->back();
+    }
+
+    public function removeFriendRequest(Request $request){
+        $user = User::find(Auth::user()->id);
+
+        $user->friendRequestsReceived()->detach($request->input('friend_request_id'));
+        return redirect()->back();
+    }
+
+    public function removeFriend(Request $request){
+        $user = User::find(Auth::user()->id);
+        $friend = User::find($request->input('friend_request_id'));
+
+        $user->relationship()->detach($friend);
+        $friend->relationship()->detach($user);
+
+        return redirect()->back();
+    }
 
 
 }
