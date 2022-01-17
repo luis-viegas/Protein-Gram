@@ -45,6 +45,11 @@ Route::post('users/{id}/friends/friend_requests','UserController@createFriendReq
 Route::post('users/{id}/friends/friend_requests/delete','UserController@removeFriendRequest')->name('remove_friend_request');
 Route::post('users/{id}/friends/delete','UserController@removeFriend')->name('remove_friend');
 
+//Messages
+Route::get('users/{id}/messages', 'ChatController@messages')->name('messages_page');
+Route::get('users/{user_id}/messages/{chat_id}', 'ChatController@show')->name('chat');
+Route::post('users/{id}/messages', 'ChatController@createChat')->name('createChat');
+Route::post('users/{user_id}/messages/{chat_id}', 'ChatController@createMessage')->name('createMessage');
 
 //Administration
 Route::get('administration','UserController@listAdministration');

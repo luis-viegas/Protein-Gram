@@ -16,7 +16,11 @@
 
           <div class="user-short-links">
             <a class="user-groups">GROUPS</a>
+            @if(Auth::check())
+            @if(Auth::user()->id == $user->id)
             <a class="user-messages" href="/users/{{$user->id}}/messages">MESSAGES</a>
+            @endif
+            @endif
             <a class="user-friends" href="/users/{{$user->id}}/friends">FRIENDS</a>
           </div>
 
@@ -41,6 +45,13 @@
               @endif
               @if(Auth::id()==$user->id)
                 <a id='create-post' class="button" href="{{ url('/posts/create')}}"> Create New Post</a>
+              @endif
+
+              @if(Auth::id()!=$user->id)
+              <form method="post" action="{{ route('createChat', $user->id) }}">
+                @csrf
+                <button type="submit" > Send Message </button>
+              </form>
               @endif
 
             @endif

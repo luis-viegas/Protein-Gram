@@ -12,14 +12,14 @@ class Message extends Model
     /**
      * User who sent the message
      */
-    public function sender(){
-        return $this->belongsTo(Account::class,'idsender','id');
+    public function user(){
+        return $this->belongsTo(User::class);
     }
     
     /**
      * User who received the message
      */
-    public function receiver(){
-        return $this->belongsTo(Account::class,'idreceiver','id');
+    public function chat(){
+        return $this->belongsTo(Chat::class);
     }
 }
