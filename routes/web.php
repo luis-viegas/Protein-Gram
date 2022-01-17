@@ -46,10 +46,12 @@ Route::post('users/{id}/friends/friend_requests/delete','UserController@removeFr
 Route::post('users/{id}/friends/delete','UserController@removeFriend')->name('remove_friend');
 
 //Messages
-Route::get('users/{id}/messages', 'ChatController@messages')->name('messages_page');
-Route::get('users/{user_id}/messages/{chat_id}', 'ChatController@show')->name('chat');
-Route::post('users/{id}/messages', 'ChatController@createChat')->name('createChat');
-Route::post('users/{user_id}/messages/{chat_id}', 'ChatController@createMessage')->name('createMessage');
+Route::get('/messages', 'ChatController@messages')->name('messages_page');
+Route::get('/messages/{chat_id}', 'ChatController@show')->name('messages_page');
+Route::get('users/{user_id}/messages', 'ChatController@userMessages')->name('messages_page'); //For admin view only
+Route::get('users/{user_id}/messages/{chat_id}', 'ChatController@userShow')->name('chat'); //For admin view only
+Route::post('messages', 'ChatController@createChat')->name('createChat');
+Route::post('messages/{chat_id}', 'ChatController@createMessage')->name('createMessage');
 
 //Administration
 Route::get('administration','UserController@listAdministration');
@@ -60,3 +62,12 @@ Route::post('login', 'Auth\LoginController@login');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
+
+
+//Messages
+Route::get('users/{id}/messages', 'ChatController@messages')->name('messages_page');
+Route::get('users/{user_id}/messages/{chat_id}', 'ChatController@show')->name('chat');
+Route::post('users/{id}/messages', 'ChatController@createChat')->name('createChat');
+Route::post('users/{user_id}/messages/{chat_id}', 'ChatController@createMessage')->name('createMessage');
+
+
