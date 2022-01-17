@@ -26,6 +26,46 @@ main > header span {
   justify-self: center;
 }
 
+#notification-tab {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+}
+
+.fa-bell {
+  color: #4357ad;
+  font-size: 25px;
+  margin-top: 6px;
+  cursor: pointer;
+}
+
+.fa-bell:hover {
+  color: grey;
+}
+
+.notifications {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 45px;
+  min-width: 100px;
+  max-width: 400px;
+  background-color: white;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.notifications.tab-open {
+  display: flex;
+}
+
+.notification {
+  padding: 5px 0;
+  border-bottom: 1px solid grey;
+  color: black;
+}
+
 .timeline {
   display: flex;
   align-items: center;
@@ -220,6 +260,7 @@ input[type="password"]:focus {
   object-fit: cover;
   border-radius: 50%;
   z-index: 100;
+  height: 100%;
 }
 
 #profile-icon-div {
@@ -235,6 +276,7 @@ input[type="password"]:focus {
 
 #profile-icon-link {
   width: 50px;
+  height: 50px;
 }
 
 .profile-menu {
@@ -348,26 +390,55 @@ input[type="password"]:focus {
 
 .messages-page {
   display: flex;
+  height: calc(100vh - 160px);
 }
 
 .contacts-list {
   width: 30%;
-  max-height: 100vh;
+  max-height: calc(100vh - 125px);
   overflow: scroll;
   border-right: 1px solid grey;
   font-family: "Spartan", sans-serif;
 }
 
-.message-history {
+.messages-page-messages {
   width: 70%;
   display: flex;
   flex-direction: column;
   padding: 20px;
-  max-height: 100vh;
-  overflow: scroll;
+  max-height: calc(100vh - 125px);
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
 }
+
+.message-history {
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  scroll-behavior: smooth;
+}
+
+#message_form {
+  position: sticky;
+  display: flex;
+}
+
+#message_form button {
+  background-color: white !important;
+  border: none !important;
+  margin: 0;
+}
+
+.fa-arrow-circle-right {
+  color: #4357AD;
+  font-size: 30px;
+  margin-top: 5px;
+}
+
+.fa-arrow-circle-right:hover {
+  color: grey;
+}
+
 
 .contact {
   display: flex;
@@ -399,11 +470,48 @@ input[type="password"]:focus {
   border-radius: 15px;
   background-color: #e5e5e5;
   margin: 10px;
+  color: black;
+  width: fit-content;
 }
 
 .self {
   align-self: end;
   background-color: #4357AD;
+}
+
+.user-short-links {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-short-links a{
+  color: black;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.user-short-links a:hover{
+  color: grey;
+}
+
+
+.invisible-button {
+  display: none;
+}
+
+.new-post {
+  display: inline;
+}
+
+.new-post form input {
+  flex: 1;
+  margin: 0 !important;
+}
+
+.new-post form {
+  display: flex;
+  margin: 0.75em 0 !important;
+  align-items: center;
 }
 
 
@@ -431,23 +539,4 @@ input[type="password"]:focus {
     position: relative;
     margin-left: 0;
   }
-}
-
-.invisible-button {
-  display: none;
-}
-
-.new-post {
-  display: inline;
-}
-
-.new-post form input {
-  flex: 1;
-  margin: 0 !important;
-}
-
-.new-post form {
-  display: flex;
-  margin: 0.75em 0 !important;
-  align-items: center;
 }

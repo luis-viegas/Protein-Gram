@@ -88,34 +88,71 @@ addEventListeners();
 
 function runFuntions(){
 
-    var friendsTab = document.getElementById("friends-list-tab");
-    var friendRequestsTab = document.getElementById("friend-requests-tab");
+    var notifBell = document.getElementsByClassName("fa-bell")[0];
+    var notifTab = document.getElementsByClassName("notifications")[0];
 
-    var friendsPage = document.getElementById("friends-list");
-    var friendRequestsPage = document.getElementsByClassName("friend-requests-list");
-
-    friendsTab.onclick = function(){
-
-        console.log(friendRequestsPage);
-
-        // friendRequestsPage.style = "display: none";
-        friendsPage.style = "display: block";
-
-        if (!friendsTab.classList.contains("active-tab")){
-            friendsTab.classList.add("active-tab");
-            friendRequestsTab.classList.remove("active-tab");
+    notifBell.onclick = function(){
+        console.log(notifTab.classList);
+        if (notifTab.classList.contains("tab-open")){
+            notifTab.classList.remove("tab-open");
+            notifTab.classList.add("tab-closed");
+        }
+        else {
+            notifTab.classList.remove("tab-closed");
+            notifTab.classList.add("tab-open");
         }
     }
 
-    friendRequestsTab.onclick = function(){
-        friendsPage.style = "display: none";
-        friendRequestsPage.style = "display: block";
+    if (window.location.href.indexOf("messages") > -1) {
+        var messageHistory = document.getElementsByClassName("message-history")[0];
+        var messageSendButton = document.getElementById("message_form").lastElementChild;
 
-        if (!friendRequestsTab.classList.contains("active-tab")){
-            friendRequestsTab.classList.add("active-tab");
-            friendsTab.classList.remove("active-tab");
+        messageHistory.scrollTo(0, messageHistory.scrollHeight);
+
+        messageSendButton.onclick = function(){
+            messageHistory.scrollTo(0, messageHistory.scrollHeight);
         }
     }
+
+    if (window.location.href.indexOf("friends") > -1){
+        var friendsTab = document.getElementById("friends-list-tab");
+        var friendRequestsTab = document.getElementById("friend-requests-tab");
+
+        var friendsPage = document.getElementById("friends-list");
+        var friendRequestsPage = document.getElementById("friend-requests-list");
+
+        friendsTab.onclick = function(){
+
+            console.log(friendRequestsPage);
+    
+            friendRequestsPage.style = "display: none";
+            friendsPage.style = "display: block";
+    
+            if (!friendsTab.classList.contains("active-tab")){
+                friendsTab.classList.add("active-tab");
+                friendRequestsTab.classList.remove("active-tab");
+            }
+        }
+    
+        friendRequestsTab.onclick = function(){
+
+            console.log(friendRequestsPage);
+
+            friendsPage.style = "display: none";
+            friendRequestsPage.style = "display: block";
+    
+            if (!friendRequestsTab.classList.contains("active-tab")){
+                friendRequestsTab.classList.add("active-tab");
+                friendsTab.classList.remove("active-tab");
+            }
+        }
+    }
+
+    
+
+    
+
+
 
 }
 

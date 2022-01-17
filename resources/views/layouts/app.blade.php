@@ -20,6 +20,7 @@
         // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
     </script>
     <script type="text/javascript" src={{ asset('js/app.js') }} defer> </script>
+    <script src="https://kit.fontawesome.com/6eab2549cc.js" crossorigin="anonymous"></script>
   <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 
   </head>
@@ -43,10 +44,22 @@
             </div>
 
           </div>
-
+          <div class="grid-menu-item">
+            <div class="corner-grid"><div id="notification-tab">
+              <i class="fas fa-bell"></i>
+              <div class="notifications tab-closed">
+                <div class="notification">notif 1</div>
+                <div class="notification">notif 2</div>
+                <div class="notification">notif 3</div>
+                <div class="notification">notif 4</div>
+              </div>
+            </div>
+          </div>
+          </div>
           <div class='grid-menu-item'>
             @if (Auth::check())
             <div id="corner-grid">
+            
             <div id="profile-icon-div">
               <a id="profile-icon-link" href="{{ url('/users/'.Auth::user()->id) }}">
                 <img id='profile-icon' src={{Auth::user()->image}}>

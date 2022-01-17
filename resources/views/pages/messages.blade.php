@@ -15,21 +15,23 @@
     
 </div>
 
-<div class="message-history">
+<div class="messages-page-messages">
 
-  @foreach ($messages as $message)
-    @if($message->user_id == Auth::user()->id)
-      @include('partials.self_message', ['message'=> $message])
-    @endif
-    @if($message->user_id != Auth::user()->id)
-      @include('partials.message_received', ['message'=> $message])
-    @endif
-  @endforeach
+<div class="message-history">
+        @foreach ($messages as $message)
+            @if($message->user_id == Auth::user()->id)
+            @include('partials.self_message', ['message'=> $message])
+            @endif
+            @if($message->user_id != Auth::user()->id)
+            @include('partials.message_received', ['message'=> $message])
+            @endif
+        @endforeach
+    </div>
 
   <form id = "message_form" >
     @csrf
     <input id="message_text" type="text" name="text" required autofocus>
-    <button type="submit"> Send </button>
+    <button type="submit"><i class="fas fa-arrow-circle-right"></i></button>
   </form>
 </div>
 
