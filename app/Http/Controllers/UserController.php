@@ -14,12 +14,10 @@ class UserController extends Controller
     public function show($id){
 
         $user = User::find($id);
-        //if (user==null) return view( Invalid user)
-        //TODO: check if user exists.
+        if (!$user) return redirect("");
         $posts = $user->posts()
                       ->orderBy('id','desc')
                       ->get();
-
         if($user->is_private==false){
             return view('pages.user', ['user'=> $user, 'posts' => $posts]);
         }
@@ -29,7 +27,6 @@ class UserController extends Controller
             }   
             return view('pages.private_user',['user'=>$user]);
         }
-        
     }
 
     public function listAdministration(){
@@ -46,30 +43,23 @@ class UserController extends Controller
         $user-> password = bcrypt($request->input('password'));
         $user-> is_admin = $request->input('is_admin');
         $user-> is_private = $request->input('is_private');
-
         $user->save();
-
         return $user;
     }
 
     public function update(Request $request, $id){
-
+        
         $user = User::find($id);
         $this->authorize('update',$user);
         $user-> name = $request->input('name');
         $user-> is_admin = $request->boolean('is_admin');
         $user-> is_private = $request->boolean('is_private');
-
         $new_image = $request->input('image');
-
         if($new_image!=''){
             $user-> image = $new_image;
         }
-
         $user-> bio = $request->input('bio');
-
         $user->save();
-
         return redirect('/users/'.$user->id);
     }
 
