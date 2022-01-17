@@ -47,8 +47,8 @@ Route::post('users/{id}/friends/delete','UserController@removeFriend')->name('re
 
 //Messages
 Route::get('/messages', 'ChatController@messages')->name('messages_page');
-Route::get('/messages/{chat_id}', 'ChatController@show')->name('messages_page');
-Route::get('users/{user_id}/messages', 'ChatController@userMessages')->name('messages_page'); //For admin view only
+Route::get('/messages/{chat_id}', 'ChatController@show');
+Route::get('users/{user_id}/messages', 'ChatController@userMessages'); //For admin view only
 Route::get('users/{user_id}/messages/{chat_id}', 'ChatController@userShow')->name('chat'); //For admin view only
 Route::post('messages', 'ChatController@createChat')->name('createChat');
 Route::post('messages/{chat_id}', 'ChatController@createMessage')->name('createMessage');
@@ -64,10 +64,5 @@ Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('re
 Route::post('register', 'Auth\RegisterController@register');
 
 
-//Messages
-Route::get('users/{id}/messages', 'ChatController@messages')->name('messages_page');
-Route::get('users/{user_id}/messages/{chat_id}', 'ChatController@show')->name('chat');
-Route::post('users/{id}/messages', 'ChatController@createChat')->name('createChat');
-Route::post('users/{user_id}/messages/{chat_id}', 'ChatController@createMessage')->name('createMessage');
 
 

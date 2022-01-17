@@ -32,6 +32,8 @@ function sendMessage(event){
     sendAjaxRequest('post', url, {text: message_text.value},null); 
     
     event.preventDefault();
+
+    message_text.value='';
 }
 
 
@@ -57,6 +59,8 @@ if(message_place>0){
     channel.bind('update', function(data) {
         let newMessage = document.createElement('div');
         console.log(data.message.text);
+        let user_url = document.getElementById("profile-icon-link").href.split('/');
+        let user_id = user_url[user_url.length-1];
         if(message_place ==3){
             if(url[2] == data.message.user_id){
                 newMessage.className = "message self";
@@ -64,7 +68,7 @@ if(message_place>0){
                 newMessage.className = "message sender";
             }   
         }else{
-            if(document.getElementById("profile-icon-link")== data.message.user_id){
+            if(user_id== data.message.user_id){
                 newMessage.className = "message self";
             }else{
                 newMessage.className = "message sender";
