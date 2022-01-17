@@ -66,6 +66,22 @@ class User extends Authenticatable
     }
 
     /**
+     * Messages written by the user
+     */
+    public function messages(){
+        return $this->hasMany(Message::class);
+    }
+
+    /**
+     * Chats user is in
+     */
+    public function chats(){
+
+        return $this->belongsToMany(Chat::class, 'chat_user', 'user_id', 'chat_id','id', 'id');
+    }
+
+
+    /**
      * Pending friend requests the user has
      */
     public function friendRequestsMade()
