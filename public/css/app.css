@@ -286,7 +286,7 @@ input[type="password"]:focus {
   text-align: right;
 }
 
-#friends-page .tabs{
+#friends-page .tabs {
   display: flex;
   justify-content: center;
 }
@@ -301,7 +301,8 @@ input[type="password"]:focus {
   padding: 20px;
 }
 
-#friends-list-tab, #friend-requests-tab {
+#friends-list-tab,
+#friend-requests-tab {
   width: 50%;
   text-align: center;
   padding: 10px;
@@ -313,7 +314,8 @@ input[type="password"]:focus {
   background-color: #e5e5e5;
 }
 
-#friends-list-tab:hover, #friend-requests-tab:hover {
+#friends-list-tab:hover,
+#friend-requests-tab:hover {
   background-color: #e5e5e5;
 }
 
@@ -332,18 +334,18 @@ input[type="password"]:focus {
   color: black;
 }
 
-.friend-card img{
+.friend-card img {
   margin: 0;
   border-radius: 10px;
   width: 80%;
   height: 80px;
 }
 
-.friend-card a{
+.friend-card a {
   color: black;
-  font-family: 'Spartan', sans-serif;
+  font-family: "Spartan", sans-serif;
   padding: 10px 0;
-  font-weight: bold ;
+  font-weight: bold;
 }
 
 .messages-page {
@@ -365,7 +367,7 @@ input[type="password"]:focus {
   padding: 20px;
   max-height: 100vh;
   overflow: scroll;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 300;
 }
 
@@ -392,7 +394,6 @@ input[type="password"]:focus {
   border-radius: 50%;
 }
 
-
 .message {
   max-width: 60%;
   padding: 10px;
@@ -403,11 +404,15 @@ input[type="password"]:focus {
 
 .self {
   align-self: end;
-  background-color: #4357AD;
+  background-color: #4357ad;
+  color: #ffffff;
 }
 
+.sender {
+  color: #000000;
+}
 
-@media (max-width: 768px){
+@media (max-width: 768px) {
   #logo-div {
     min-width: 145px;
     width: 30%;
