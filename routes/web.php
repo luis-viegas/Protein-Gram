@@ -62,3 +62,12 @@ Route::post('login', 'Auth\LoginController@login');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
+
+
+//Messages
+Route::get('users/{id}/messages', 'ChatController@messages')->name('messages_page');
+Route::get('users/{user_id}/messages/{chat_id}', 'ChatController@show')->name('chat');
+Route::post('users/{id}/messages', 'ChatController@createChat')->name('createChat');
+Route::post('users/{user_id}/messages/{chat_id}', 'ChatController@createMessage')->name('createMessage');
+
+
