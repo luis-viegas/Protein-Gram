@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\User;
+use App\Events\MessageUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -71,6 +72,9 @@ class ChatController extends Controller
 
         $message->save();
 
-        return redirect()->back();
+        event(new MessageUpdate($message));
+
     }
+
+    
 }

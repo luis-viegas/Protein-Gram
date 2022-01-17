@@ -3,6 +3,8 @@
 @section('title', $user->name)
 
 @section('content')
+
+
 <section class="messages-page" id='messages-page'>
 
 <div class="contacts-list">
@@ -10,7 +12,7 @@
   @foreach ($chats as $contact)
     @include('partials.contact', ['chat'=> $contact])
   @endforeach
-        
+    
 </div>
 
 <div class="message-history">
@@ -24,14 +26,12 @@
     @endif
   @endforeach
 
-  <form method="post"  action="{{ route('createMessage', [$user->id, $chat->id]) }}">
+  <form id = "message_form" >
     @csrf
-    <input  type="text" name="text" required autofocus>
+    <input id="message_text" type="text" name="text" required autofocus>
     <button type="submit"> Send </button>
   </form>
 </div>
-
-
 
 
 </section>
