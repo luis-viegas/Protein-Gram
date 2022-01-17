@@ -9,6 +9,7 @@ DROP FUNCTION IF EXISTS befriending CASCADE;
 DROP FUNCTION IF EXISTS users_search_update CASCADE;
 
 CREATE TYPE like_type AS ENUM ('BUMP_FIST', 'LIKE', 'FLEXING', 'WEIGHTS', 'EGG');
+CREATE TYPE notification_type AS ENUM ('comment', 'post_like','comment_like','comment_tag','message','comment_reply');
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -100,20 +101,21 @@ CREATE TABLE comments(
 CREATE TABLE post_likes(
   post_id INTEGER REFERENCES posts(id) ON UPDATE CASCADE ,
   user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
-  TYPE like_type NOT NULL,
+  type like_type NOT NULL,
 	PRIMARY KEY (post_id , user_id)
 );
 
 CREATE TABLE comment_likes(
   comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE ,
   user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
-  TYPE like_type NOT NULL,
+  type like_type NOT NULL,
 	PRIMARY KEY ( comment_id , user_id)
 );
 
 CREATE TABLE comment_tags(
   comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE ,
   user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+  type notification_type NOT NULL,
 	PRIMARY KEY ( comment_id , user_id)
 );
 
@@ -140,11 +142,20 @@ CREATE TABLE notifications_comment_like(
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE NOT NULL
 );
 
-CREATE TABLE notifications_post(
+CREATE TABLE notifications_comment_tag(
     notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
-    post_id INTEGER REFERENCES posts(id) ON UPDATE CASCADE NOT NULL
+    comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE NOT NULL
 );
 
+CREATE TABLE notifications_comment_reply(
+    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
+    comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE NOT NULL
+);
+
+CREATE TABLE notifications_message(
+    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
+    message_id INTEGER REFERENCES messages(id) ON UPDATE CASCADE NOT NULL
+);
 
 
 
@@ -292,8 +303,27 @@ INSERT INTO users VALUES (
   TRUE
 ); -- Password is 1234. Generated using Hash::make('1234')
 
-
-
+/*
+SELECT * FROM notifications
+INNER JOIN 
+  (CASE
+    WHEN type='comment' THEN
+      notifications_comment
+    WHEN type='post_like' THEN
+      notifications_post_like
+    WHEN type='comment_like' THEN
+      notifications_comment_like
+    WHEN type='comment_tag' THEN
+      notifications_comment_tag
+    WHEN type='message' THEN
+      notifications_message
+    WHEN type='comment_reply' THEN
+      notifications_comment_reply
+    ELSE
+      notifications
+    END) as table2
+ON notifications.id = table2.notification_id
+*/
 /* TODO: 
 
 CREATE TABLE images(
