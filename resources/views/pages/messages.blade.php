@@ -10,7 +10,7 @@
 <div class="contacts-list">
 
   @foreach ($chats as $contact)
-    @include('partials.contact', ['chat'=> $contact])
+    @include('partials.contact', ['contact'=> $contact])
   @endforeach
     
 </div>

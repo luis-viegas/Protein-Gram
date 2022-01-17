@@ -18,7 +18,7 @@
             <a class="user-groups">GROUPS</a>
             @if(Auth::check())
             @if(Auth::user()->id == $user->id)
-            <a class="user-messages" href="/users/{{$user->id}}/messages">MESSAGES</a>
+            <a class="user-messages" href="/messages">MESSAGES</a>
             @endif
             @endif
             <a class="user-friends" href="/users/{{$user->id}}/friends">FRIENDS</a>

@@ -16,7 +16,7 @@ class ChatController extends Controller
         $user_id=$user->id;
         $chat = $user->chats()->first()->id;
         if(!$chat)  return redirect("/");
-        return $this->userShow($user_id,$chat);
+        return redirect("/messages/{$chat}");
 
     }
     public function userMessages($user_id){
@@ -47,8 +47,9 @@ class ChatController extends Controller
         $chat = $chats->find($chat_id);
         if(!$chat)return redirect("/users/{$user_id}/messages");
         $messages = $chat->messages()->orderBy('id')->get();
-        return view('pages.messages', ['user'=>$user,'chat'=>$chat,'chats'=>$chats->get(), 'messages'=>$messages ]);
+        return view('pages.messages', ['user'=>$user,'chat'=>$chat,'chats'=>$user->chats()->get(), 'messages'=>$messages ]);
     }
+
     public function show($chat_id){
         $user = Auth::user();
         if(!$user)return redirect("/");
@@ -56,7 +57,7 @@ class ChatController extends Controller
         $chat = $chats->find($chat_id);
         if(!$chat)return redirect("/messages");
         $messages = $chat->messages()->orderBy('id')->get();
-        return view('pages.messages', ['user'=>$user,'chat'=>$chat,'chats'=>$chats->get(), 'messages'=>$messages ]);
+        return view('pages.messages', ['user'=>$user,'chat'=>$chat,'chats'=>$user->chats()->get(), 'messages'=>$messages ]);
     }
 
     public function createChat($id){ //TODO
