@@ -54,6 +54,11 @@ Route::get('users/{user_id}/messages/{chat_id}', 'ChatController@userShow')->nam
 Route::post('messages/{user_id}', 'ChatController@createChat')->name('createChat');
 Route::post('messages/{chat_id}/send', 'ChatController@createMessage')->name('createMessage');
 
+//Notifications
+Route::post('notifications/{last_id}','NotificationController@checkNew')->name('check_new_notifications');
+Route::post('notifications','NotificationController@get')->name('get_notifications');
+Route::put('notifications/{last_id}','NotificationController@consume')->name('consume_notifications');
+
 //Administration
 Route::get('administration','UserController@listAdministration')->name('show_all_users');
 

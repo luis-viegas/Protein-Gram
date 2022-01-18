@@ -6,11 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
+use App\Events\NotificationUpdate;
 
 class Notification extends Model
 {
     public $timestamps = false;
 
+    protected static function booted(){
+        static::created(function($notification){
+            event (New NotificationUpdate($notification));
+        });
+    }
+    
     /**
      * User who got the notification
      */
@@ -49,6 +56,5 @@ class Notification extends Model
             ->join('notifications_comment_tag','notifications_comment_tag.notification_id','=','notifications.id')
             ->join('notifications_message','notifications_message.notification_id','=','notifications.id')
             ->join('notifications_comment_reply','notifications_comment_reply.notification_id','=','notifications.id');*/
-        
     }
 }
