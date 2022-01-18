@@ -25,5 +25,4 @@ class NotificationMessage extends Model
     {
         return $this->belongsTo(Message::class,'message_id','id');
     }
-    
 }

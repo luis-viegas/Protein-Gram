@@ -12,10 +12,10 @@ class PostController extends Controller
 {
 
     public function show($id){
-
         $post = Post::find($id);
-        $user = $post->user();
-        return view('partials.post', ['post'=>$post, 'user'=>$user]);
+        if($post->poster()->first()->is_private)
+            return redirect('/');
+        return view('pages.mainPage', ['posts'=>['0'=>$post],'showNewPost'=>False]);
     }
 
     public function publicTimeline(){

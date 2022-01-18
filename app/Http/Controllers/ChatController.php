@@ -88,7 +88,8 @@ class ChatController extends Controller
         $message->user_id = $user->id;
         $message->chat_id = $chat_id;
         $message->save();
-        event(new MessageUpdate($message));
+
+        //event(new MessageUpdate($message));
     }
 
     
