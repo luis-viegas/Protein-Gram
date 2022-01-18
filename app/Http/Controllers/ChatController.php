@@ -13,11 +13,11 @@ class ChatController extends Controller
 {
     public function messages(){
         $user = Auth::user();
+        if(!$user) return redirect("/login");
         $user_id=$user->id;
-        $chat = $user->chats()->first()->id;
+        $chat = $user->chats()->first();
         if(!$chat)  return redirect("/");
-        return redirect("/messages/{$chat}");
-
+        return redirect("messages/{$chat->id}");
     }
     public function userMessages($user_id){
         $user = Auth::user();
@@ -36,73 +36,55 @@ class ChatController extends Controller
 
     public function userShow($user_id, $chat_id){
         $currentUser = Auth::user();
-        $user = null;
-        $chat = null;
         if(!$currentUser || !($currentUser->is_admin)){
             return redirect("/messages");
         }
+        $user = null;
+        $chat = null;
         $user = User::find($user_id);
         if(!$user)return redirect("/messages");
-        $chats = $user->chats();
-        $chat = $chats->find($chat_id);
+        $chats = $user->chats()->find($chat_id);
+        $chat = $chats->get();
         if(!$chat)return redirect("/users/{$user_id}/messages");
         $messages = $chat->messages()->orderBy('id')->get();
-        return view('pages.messages', ['user'=>$user,'chat'=>$chat,'chats'=>$user->chats()->get(), 'messages'=>$messages ]);
+        return view('pages.messages', ['user'=>$user,'chat'=>$chat,'chats'=>$chats->get(), 'messages'=>$messages ]);
     }
-
     public function show($chat_id){
         $user = Auth::user();
         if(!$user)return redirect("/");
-        $chats = $user->chats();
-        $chat = $chats->find($chat_id);
+        $chats = $user->chats()->find($chat_id);
+        $chat = $chats->get();
         if(!$chat)return redirect("/messages");
-        $messages = $chat->messages()->orderBy('id')->get();
-        return view('pages.messages', ['user'=>$user,'chat'=>$chat,'chats'=>$user->chats()->get(), 'messages'=>$messages ]);
+        $messages = $chats->messages()->orderBy('id')->get();
+        return view('pages.messages', ['user'=>$user,'chat'=>$chat,'chats'=>$chats->get(), 'messages'=>$messages ]);
     }
 
     public function createChat($id){ //TODO
-
         $user = Auth::user();
-
-        $chats_of_user = $user->chats()->get();
-        foreach($chats_of_user as $chat){
-            if($chat->users()->find($id)){
-                $chats = $user->chats()->orderBy('updated_at', 'desc')->get();
-                $messages = $chat->messages()->orderBy('id')->get();
-                return view('pages.messages', ['user'=>$user,'chat'=>$chat,'chats'=>$chats, 'messages'=>$messages ]);
-            }
-            
+        if(!$user)return redirect()->back();
+        $chat = $user->sharedChats($id);
+        if( empty($chat) ){
+            $newChat = new Chat();
+            $newChat->save();
+            $newChat->users()->attach($user->id);
+            $newChat->users()->attach($id);
+            $chat=$newChat->id;
+        }else{
+            $chat=$chat[0];
         }
-
-        $newChat = new Chat();
-        $newChat->save();
-
-        $newChat->users()->attach(Auth::id());
-        $newChat->users()->attach($id);
-        
-    
-
-        //$chats = $user->chats()->orderBy('updated_at', 'desc')->get();
-        $chats = $user->chats()->get();
-
-        $messages = $newChat->messages()->orderBy('id','desc')->get();
-
-        return view('pages.messages', ['user'=>Auth::user(),'chat'=>$newChat,'chats'=>$chats, 'messages'=>$messages ]);
+        return redirect("messages/{$chat}");
     }
 
     public function createMessage($chat_id, Request $request){
         $user = Auth::user();
         if(!$user)return redirect()->back();
-        if(!($user->chats()->find($chat_id)))return redirect()->back();
-        
+        if(!($user->chats()->find($chat_id)->get())) return redirect()->back();
         $message = new Message();
         $message->text = $request->input('text');
         $message->user_id = $user->id;
         $message->chat_id = $chat_id;
         $message->save();
-
         event(new MessageUpdate($message));
-
     }
 
     

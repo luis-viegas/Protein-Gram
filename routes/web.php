@@ -47,14 +47,14 @@ Route::post('users/{id}/friends/delete','UserController@removeFriend')->name('re
 
 //Messages
 Route::get('/messages', 'ChatController@messages')->name('messages_page');
-Route::get('/messages/{chat_id}', 'ChatController@show');
-Route::get('users/{user_id}/messages', 'ChatController@userMessages'); //For admin view only
-Route::get('users/{user_id}/messages/{chat_id}', 'ChatController@userShow')->name('chat'); //For admin view only
-Route::post('messages', 'ChatController@createChat')->name('createChat');
-Route::post('messages/{chat_id}', 'ChatController@createMessage')->name('createMessage');
+Route::get('/messages/{chat_id}', 'ChatController@show')->name('chat');
+Route::get('users/{user_id}/messages', 'ChatController@userMessages')->name('user_messages_page'); //For admin view only
+Route::get('users/{user_id}/messages/{chat_id}', 'ChatController@userShow')->name('user_chat'); //For admin view only
+Route::post('messages/{user_id}', 'ChatController@createChat')->name('createChat');
+Route::post('messages/{chat_id}/send', 'ChatController@createMessage')->name('createMessage');
 
 //Administration
-Route::get('administration','UserController@listAdministration');
+Route::get('administration','UserController@listAdministration')->name('show_all_users');
 
 // Authentication
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');

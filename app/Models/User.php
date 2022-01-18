@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -135,5 +136,8 @@ class User extends Authenticatable
     public function likedPosts()
     {
         return $this->belongsToMany(Post::class,'post_likes','user_id','post_id','id','id');
+    }
+    public function sharedChats($user2_id){
+        return DB::select(DB::raw("SELECT user1_chats as id FROM (SELECT id as user1_chats FROM chats inner join chat_user on id = chat_id where user_id = $user2_id) as user1 INNER JOIN (SELECT id as user2_chats FROM chats inner join chat_user on id = chat_id where user_id = $this->id) as user2 ON user1.user1_chats = user2.user2_chats"));
     }
 }

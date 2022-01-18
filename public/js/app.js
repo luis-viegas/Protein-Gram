@@ -29,10 +29,8 @@ function sendAjaxRequest(method, url, data, handler) {
 function sendMessage(event){ 
     const message_text = document.getElementById("message_text");
     const url = window.location.pathname;
-    sendAjaxRequest('post', url, {text: message_text.value},null); 
-    
+    sendAjaxRequest('post', url.concat("/send"), {text: message_text.value},null); 
     event.preventDefault();
-
     message_text.value='';
 }
 
