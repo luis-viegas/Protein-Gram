@@ -123,6 +123,7 @@ CREATE TABLE notifications(
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE NOT NULL,
     dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    type notification_type NOT NULL
 );
 
 CREATE TABLE notifications_comment(

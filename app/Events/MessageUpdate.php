@@ -18,7 +18,6 @@ class MessageUpdate implements ShouldBroadcast
   public function __construct(Message $message)
   {
       $this->message = $message;
-
   }
 
   public function broadcastOn()
