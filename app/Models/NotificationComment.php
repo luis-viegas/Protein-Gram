@@ -9,6 +9,8 @@ class NotificationComment extends Model
 {
     protected $table = 'notifications_comment';
     public $timestamps = false;
+    protected $primaryKey = 'notification_id';
+    protected $fillable = ['notification_id', 'comment_id',];
 
     /**
      * Notification this refers to

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class NotificationReplyComment extends Model
 {
     protected $table = 'notifications_comment_reply';
+    protected $primaryKey = 'notification_id';
     public $timestamps = false;
 
     public function notification()

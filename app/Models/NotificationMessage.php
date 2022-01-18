@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class NotificationMessage extends Model
 {
     protected $table = 'notifications_message';
+    protected $primaryKey = 'notification_id';
     public $timestamps = false;
 
     /**

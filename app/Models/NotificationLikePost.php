@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class NotificationLikePost extends Model
 {
     protected $table = 'notifications_post_like';
+    protected $primaryKey = 'notification_id';
     public $timestamps = false;
 
     public function notification()

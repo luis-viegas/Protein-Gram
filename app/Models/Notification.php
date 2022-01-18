@@ -11,7 +11,9 @@ use App\Events\NotificationUpdate;
 class Notification extends Model
 {
     public $timestamps = false;
-
+    protected $fillable = [
+        'user_id', 'type',
+    ];
     protected static function booted(){
         static::created(function($notification){
             event (New NotificationUpdate($notification));
@@ -33,12 +35,10 @@ class Notification extends Model
     {
         switch($this->type){
             case 'comment':
-                return DB::select(DB::raw('SELECT notifications.id as id, notifications.type as type, dates as created_at, comment_id, comments.user_id as user_id, post_id, name, image FROM notifications INNER JOIN notifcations_comment ON id = notification_id INNER JOIN comments ON notifications_comment.comment_id = comments.id INNER JOIN users ON comments.user_id = users.id WHERE notifications.id = ?', [$this->id]));
-                //return $this->join(NotificationComment::class,'notifications_comment.notification_id','=','notifications.id');
+                return DB::select('SELECT notifications.id as id, notifications.type as type, dates as created_at, comment_id, comments.user_id as user_id, post_id, name, image FROM notifications INNER JOIN notifications_comment ON id = notification_id INNER JOIN comments ON notifications_comment.comment_id = comments.id INNER JOIN users ON comments.user_id = users.id WHERE notifications.id = ?', [$this->id])[0];
                 //(id:notification, created_at:notification, comment_id, user_id:comment, post_id: comment, name:commenter, image:commenter)
             case 'post_like':
-                return DB::select(DB::raw('SELECT notifications.id as id, notifications.type as type, dates as created_at, user_id, post_id, name, image FROM notifications INNER JOIN notifcations_post_like ON id = notification_id INNER JOIN post_likes ON notifications_post_like.post_id = post_likes.post_id AND notifications_post_like.user_id = post_likes.user_id INNER JOIN users ON notifications_post_like.user_id = users.id WHERE notifications.id = ?', [$this->id]));
-                //return $this->join(NotificationLikePost::class,'notifications_post_like.notification_id','=','notifications.id');
+                return DB::select('SELECT notifications.id as id, notifications.type as type, dates as created_at, user_id, post_id, name, image FROM notifications INNER JOIN notifications_post_like ON id = notification_id INNER JOIN post_likes ON notifications_post_like.post_id = post_likes.post_id AND notifications_post_like.user_id = post_likes.user_id INNER JOIN users ON notifications_post_like.user_id = users.id WHERE notifications.id = $1', [$this->id])[0];
             case 'comment_like':
                 return $this->join(NotificationLikeComment::class,'notifications_comment_like.notification_id','=','notifications.id');
             case 'comment_tag': 

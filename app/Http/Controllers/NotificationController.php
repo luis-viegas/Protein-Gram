@@ -25,13 +25,12 @@ class NotificationController extends Controller
     public function get(){
         $user=Auth::user();
         if(!$user) return redirect()->back();
-        $notifications = $user->notifications()->select('id')->get();//or use ->get()->pluck('id');
-        $count = $notifications->count();
         $specificsArray = array();
-        foreach($notifications as $notif){
-            $specificsArray[$notif->id] = Notification::find($notif->id)->specific();
+        $ns = $user->notifications()->orderBy('id','desc')->limit(10)->get();
+        foreach($ns as $n){
+            info($n);
+            $specificsArray[$n->id] = $n->specific();
         }
-        //$user->notifications()->where('id','<=',end($specificsArray)->id)->where('consumed',False)->update(['consumed'=>True]);
         return view('partials.notifications', ['notifications' => $specificsArray] );
     }
     public function consume($last_id){

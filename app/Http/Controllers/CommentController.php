@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Notification;
+use App\Models\NotificationComment;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,6 +45,14 @@ class CommentController extends Controller
 
         $comment->save();
 
+        $notification = new Notification();
+        $notification->user_id = Post::find($post_id)->poster()->first()->id;
+        $notification->type = 'comment';
+        $notification->save();
+        $notification_comment = new NotificationComment();
+        $notification_comment->notification_id=$notification->id;
+        $notification_comment->comment_id=$comment->id;
+        $notification_comment->save();
         return redirect()->back();
     }
 
