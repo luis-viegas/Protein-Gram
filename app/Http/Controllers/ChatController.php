@@ -63,16 +63,20 @@ class ChatController extends Controller
         $user = Auth::user();
         if(!$user)return redirect()->back();
         $chat = $user->sharedChats($id);
-        if( empty($chat) ){
-            $newChat = new Chat();
-            $newChat->save();
-            $newChat->users()->attach($user->id);
-            $newChat->users()->attach($id);
-            $chat=$newChat->id;
-        }else{
-            $chat=$chat[0];
+        if( !empty($chat) ){
+            foreach($chat as $c){
+                if(Chat::find($c->id)->users()->count()==2){
+                    $chat=$c->id;
+                }
+            }
+            return redirect("messages/{$chat}");
         }
-        return redirect("messages/{$chat}");
+        $newChat = new Chat();
+        $newChat->save();
+        $newChat->users()->attach($user->id);
+        $newChat->users()->attach($id);
+        return redirect("messages/{$newChat->id}");
+
     }
 
     public function createMessage($chat_id, Request $request){
