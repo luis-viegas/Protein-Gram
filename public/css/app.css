@@ -31,6 +31,7 @@ main > header span {
   flex-direction: column;
   position: relative;
   align-items: center;
+  margin: 15px;
 }
 
 .fa-bell {
@@ -359,11 +360,11 @@ input[type="password"]:focus {
   background-color: #e5e5e5;
 }
 
-#friends_list {
+#friends_list, #friend-requests {
   display: flex;
 }
 
-.friend-card {
+.friend-card, .friend-request-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -372,20 +373,29 @@ input[type="password"]:focus {
   border-radius: 15px;
   background-color: #efefef;
   color: black;
+  width: 200px;
 }
 
-.friend-card img{
+.friend-card img, .friend-request-card img{
   margin: 0;
   border-radius: 10px;
   width: 80%;
   height: 80px;
 }
 
-.friend-card a{
+.friend-card a, .friend-request-card a{
   color: black;
   font-family: 'Spartan', sans-serif;
   padding: 10px 0;
   font-weight: bold ;
+}
+
+.request-answer {
+  margin-top: 10px;
+}
+
+.request-answer form {
+  margin: 0;
 }
 
 .messages-page {
@@ -393,12 +403,18 @@ input[type="password"]:focus {
   height: calc(100vh - 160px);
 }
 
-.contacts-list {
+.contacts-list{
   width: 30%;
   max-height: calc(100vh - 125px);
   overflow: scroll;
   border-right: 1px solid grey;
   font-family: "Spartan", sans-serif;
+}
+
+.contacts-list-contacts {
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
 }
 
 .messages-page-messages {
@@ -514,6 +530,10 @@ input[type="password"]:focus {
   align-items: center;
 }
 
+.contacts-menu {
+  display: none;
+}
+
 
 @media (max-width: 768px){
   #logo-div {
@@ -538,5 +558,41 @@ input[type="password"]:focus {
   .user_item {
     position: relative;
     margin-left: 0;
+  }
+
+  .contacts-menu {
+    display: block;
+    margin: 15px;
+    font-size: 30px;
+    color: #4357ad;
+  }
+
+  .contacts-list {
+    width: 50px;
+    border: none;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .contacts-list-contacts {
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .contacts-list-contacts {
+    width: 0;
+  }
+
+  .messages-page-messages {
+    width: 100%;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .collapse-history {
+    width: 0%;
+    padding: 0;
+  }
+
+
+  .expand-contact-list {
+    width: 100%;
   }
 }

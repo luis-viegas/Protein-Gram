@@ -92,7 +92,6 @@ function runFuntions(){
     var notifTab = document.getElementsByClassName("notifications")[0];
 
     notifBell.onclick = function(){
-        console.log(notifTab.classList);
         if (notifTab.classList.contains("tab-open")){
             notifTab.classList.remove("tab-open");
             notifTab.classList.add("tab-closed");
@@ -107,11 +106,47 @@ function runFuntions(){
         var messageHistory = document.getElementsByClassName("message-history")[0];
         var messageSendButton = document.getElementById("message_form").lastElementChild;
 
+        var contactsMenu = document.getElementsByClassName("contacts-menu")[0];
+        var messageHistory = document.getElementsByClassName("messages-page-messages")[0];
+        var contactsList = document.getElementsByClassName("contacts-list")[0];
+        var contactsListContacts = document.getElementsByClassName("contacts-list-contacts")[0];
+        var contact = document.getElementsByClassName("contact");
+         
         messageHistory.scrollTo(0, messageHistory.scrollHeight);
 
         messageSendButton.onclick = function(){
             messageHistory.scrollTo(0, messageHistory.scrollHeight);
         }
+
+        contactsMenu.onclick = function(){
+            
+            if (contactsMenu.classList.contains("menu-closed")){
+                
+                contactsMenu.classList.remove("menu-closed");
+                contactsMenu.classList.add("menu-open");
+
+                messageHistory.classList.add("collapse-history");
+                contactsList.classList.add("expand-contact-list");
+                contactsListContacts.classList.add("expand-contact-list");
+            }
+            else {
+                contactsMenu.classList.add("menu-closed");
+                contactsMenu.classList.remove("menu-open");
+
+                messageHistory.classList.remove("collapse-history");
+                contactsList.classList.remove("expand-contact-list");
+                contactsListContacts.classList.remove("expand-contact-list");
+            }
+
+            
+        }
+
+        contact.addEventListener("click", function(){
+            console.log("CLICKED CONTACT");
+
+            messageHistory.classList.remove("collapse-history");
+            contactsList.classList.remove("expand-contact-list");
+        });
     }
 
     if (window.location.href.indexOf("friends") > -1){
@@ -122,8 +157,6 @@ function runFuntions(){
         var friendRequestsPage = document.getElementById("friend-requests-list");
 
         friendsTab.onclick = function(){
-
-            console.log(friendRequestsPage);
     
             friendRequestsPage.style = "display: none";
             friendsPage.style = "display: block";
@@ -136,8 +169,6 @@ function runFuntions(){
     
         friendRequestsTab.onclick = function(){
 
-            console.log(friendRequestsPage);
-
             friendsPage.style = "display: none";
             friendRequestsPage.style = "display: block";
     
@@ -148,15 +179,7 @@ function runFuntions(){
         }
     }
 
-    
-
-    
-
-
-
 }
-
-
 
 window.onload = runFuntions();
 

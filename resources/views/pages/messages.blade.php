@@ -9,9 +9,15 @@
 
 <div class="contacts-list">
 
-  @foreach ($chats as $contact)
-    @include('partials.contact', ['contact'=> $contact])
-  @endforeach
+<div class="contacts-menu menu-closed"><i class="fas fa-bars"></i></div>
+
+<div class="contacts-list-contacts">
+    @foreach ($chats as $contact)
+        @include('partials.contact', ['contact'=> $contact])
+    @endforeach
+</div>
+
+  
     
 </div>
 
