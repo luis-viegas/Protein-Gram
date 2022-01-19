@@ -53,6 +53,8 @@ class CommentController extends Controller
         $notification_comment->notification_id=$notification->id;
         $notification_comment->comment_id=$comment->id;
         $notification_comment->save();
+        $notification->broadcast();
+
         return redirect()->back();
     }
 

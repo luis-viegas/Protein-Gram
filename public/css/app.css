@@ -406,7 +406,7 @@ input[type="password"]:focus {
 .contacts-list{
   width: 30%;
   max-height: calc(100vh - 125px);
-  overflow: scroll;
+  overflow: auto;
   border-right: 1px solid grey;
   font-family: "Spartan", sans-serif;
 }
@@ -414,7 +414,7 @@ input[type="password"]:focus {
 .contacts-list-contacts {
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .messages-page-messages {
@@ -425,18 +425,20 @@ input[type="password"]:focus {
   max-height: calc(100vh - 125px);
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
+  justify-content: space-between;
 }
 
 .message-history {
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  overflow: auto;
   scroll-behavior: smooth;
 }
 
 #message_form {
   position: sticky;
   display: flex;
+  margin-bottom: 0;
 }
 
 #message_form button {

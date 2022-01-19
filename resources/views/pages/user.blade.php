@@ -26,16 +26,17 @@
 
           <div class="user-options">
             @if(Auth::check())
-              @if(Auth::user()->id != $user->id && !Auth::user()->friendRequestsMade->contains('id', $user->id) && !Auth::user()->relationships->contains('id', $user->id))
-              <form method="post" action="{{ route('create_friend_request',$user->id) }}">
+              @if(Auth::user()->id != $user->id && !Auth::user()->friendRequestsMade->contains('id', $user->id) && !Auth::user()->isFriend($user->id))
+              <form method="post" action="{{ route('create_friend_request') }}">
                 @csrf
+                <input type="text" name="friend_request_id" value="{{$user->id}}" hidden>
                 <button type="submit" > Add Friend </button>
               </form>
               @endif
               @if(Auth::user()->friendRequestsMade->contains('id', $user->id))
-                <h5> You already asked this person to be your friend </h5>
+                <h5> You have asked this person to be your friend </h5>
               @endif
-              @if(Auth::user()->relationships->contains('id', $user->id))
+              @if(Auth::user()->isFriend($user->id))
                 <h5> You and {{$user->name}} are friends </h5>
               @endif
 

@@ -44,18 +44,15 @@
             </div>
 
           </div>
+          @if (Auth::check())
           <div class="grid-menu-item">
             <div class="corner-grid"><div id="notification-tab">
               <i class="fas fa-bell"></i>
-              <div class="notifications tab-closed">
-                <div class="notification">notif 1</div>
-                <div class="notification">notif 2</div>
-                <div class="notification">notif 3</div>
-                <div class="notification">notif 4</div>
-              </div>
+              @include('partials.notifications', ['notifications'=> Auth::user()->notifications()->orderBy('id','desc')->limit(10)->get()])
             </div>
           </div>
           </div>
+          @endif
           <div class='grid-menu-item'>
             @if (Auth::check())
             <div id="corner-grid">

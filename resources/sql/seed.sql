@@ -57,15 +57,18 @@ CREATE TABLE messages(
 CREATE TABLE relationships(
   id1 INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
   id2 INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
-  friends BOOLEAN, -- TODO: trigger to make the id2,id1 entry the same on update.
-  blocked BOOLEAN DEFAULT FALSE,
-	PRIMARY KEY (id1 , id2)
+  friends BOOLEAN,
+  blocked1 BOOLEAN DEFAULT FALSE,
+  blocked2 BOOLEAN DEFAULT FALSE,
+	PRIMARY KEY (id1 , id2),
+  CONSTRAINT id_order CHECK (id1 < id2)
 );
 
 CREATE TABLE friend_requests( 
   id1 INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
   id2 INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
-	PRIMARY KEY (id1 , id2)
+	PRIMARY KEY (id1 , id2),
+  CONSTRAINT id_different CHECK (id1 <> id2)
 );
 
 CREATE TABLE groups(

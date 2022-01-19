@@ -4,12 +4,12 @@
         @foreach($friendRequests as $friendRequest)
         <div class="friend-request-card">
             <img class="post-profile-image" src={{$friendRequest->image}}>
-            <a href="users/{{ $friendRequest->id }}">{{$friendRequest->name}}</a>
+            <a href="{{route('show_user',$friendRequest->id)}}">{{$friendRequest->name}}</a>
             <div>{{$friendRequest->email}}</div>
             @if(Auth::check())
                 @if(Auth::user()->id == $user->id)
                 <div class="request-answer">
-                    <form method="post" action="{{route('remove_friend_request', Auth::user()->id)}}">
+                    <form method="post" action="{{route('remove_friend_request')}}">
                         @csrf
                         <input type="text" name="friend_request_id" value="{{$friendRequest->id}}" hidden >
                         <button type="submit" >Delete </button>
@@ -17,6 +17,7 @@
 
                     <form method="post" action="{{route('create_friend_request', $friendRequest->id)}}">
                         @csrf
+                        <input type="text" name="friend_request_id" value="{{$friendRequest->id}}" hidden >
                         <button type="submit" >Accept </button>
                     </form>
                 </div>

@@ -76,6 +76,7 @@ if(message_place>0){
         newMessage.innerText = data.message.text;
         let message_form = document.getElementsByClassName('message-history')[0];
         message_form.appendChild(newMessage);
+        message_form.scrollTo(0, message_form.scrollHeight);
     });
 }
 
@@ -105,7 +106,7 @@ function runFuntions(){
         var messageSendButton = document.getElementById("message_form").lastElementChild;
 
         var contactsMenu = document.getElementsByClassName("contacts-menu")[0];
-        var messageHistory = document.getElementsByClassName("messages-page-messages")[0];
+        // var messageHistory = document.getElementsByClassName("messages-page-messages")[0];
         var contactsList = document.getElementsByClassName("contacts-list")[0];
         var contactsListContacts = document.getElementsByClassName("contacts-list-contacts")[0];
         var contact = document.getElementsByClassName("contact");

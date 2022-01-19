@@ -28,7 +28,6 @@ class NotificationController extends Controller
         $specificsArray = array();
         $ns = $user->notifications()->orderBy('id','desc')->limit(10)->get();
         foreach($ns as $n){
-            info($n);
             $specificsArray[$n->id] = $n->specific();
         }
         return view('partials.notifications', ['notifications' => $specificsArray] );
