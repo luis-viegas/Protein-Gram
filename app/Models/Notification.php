@@ -29,32 +29,29 @@ class Notification extends Model
     }
 
     /**
-     * returns the Notification of a specific type that created this
+     * returns the Notification object of a specific type that created this
      */
     public function specific()
     {
         switch($this->type){
             case 'comment':
                 return DB::select('SELECT notifications.id as id, notifications.type as type, dates as created_at, comment_id, comments.user_id as user_id, post_id, name, image FROM notifications INNER JOIN notifications_comment ON id = notification_id INNER JOIN comments ON notifications_comment.comment_id = comments.id INNER JOIN users ON comments.user_id = users.id WHERE notifications.id = ?', [$this->id])[0];
-                //(id:notification, created_at:notification, comment_id, user_id:comment, post_id: comment, name:commenter, image:commenter)
+                // notification:(id, type, created_at) comment:(comment_id, post_id) commenter:(user_id, name, image)
             case 'post_like':
-                return DB::select('SELECT notifications.id as id, notifications.type as type, dates as created_at, user_id, post_id, name, image FROM notifications INNER JOIN notifications_post_like ON id = notification_id INNER JOIN post_likes ON notifications_post_like.post_id = post_likes.post_id AND notifications_post_like.user_id = post_likes.user_id INNER JOIN users ON notifications_post_like.user_id = users.id WHERE notifications.id = $1', [$this->id])[0];
+                return DB::select('SELECT notifications.id as id, notifications.type as type, dates as created_at, user_id, post_id, name, image FROM notifications INNER JOIN notifications_post_like ON id = notification_id INNER JOIN post_likes ON notifications_post_like.post_id = post_likes.post_id AND notifications_post_like.user_id = post_likes.user_id INNER JOIN users ON notifications_post_like.user_id = users.id WHERE notifications.id = ?', [$this->id])[0];
+                // notification:(id, type, created_at) post:(post_id) liker:(user_id, name, image)
             case 'comment_like':
-                return $this->join(NotificationLikeComment::class,'notifications_comment_like.notification_id','=','notifications.id');
+                return DB::select('SELECT notifications.id as id, notifications.type as type, dates as created_at, user_id, comment_id, post_id, name, image FROM notifications INNER JOIN notifications_comment_like ON id = notification_id INNER JOIN comment_likes ON notifications_comment_like.comment_id = comment_likes.comment_id AND notifications_comment_like.user_id = comment_likes.user_id INNER JOIN users ON notifications_comment_like.user_id = users.id WHERE notifications.id = ?', [$this->id])[0];
+                // notification:(id, type, created_at) comment:(comment_id, post_id) liker:(user_id, name, image)
             case 'comment_tag': 
-                return $this->join(NotificationTagComment::class,'notifications_comment_tag.notification_id','=','notifications.id');
+                return DB::select('SELECT notifications.id as id, notifications.type as type, dates as created_at, user_id, comment_id, post_id, name, image FROM notifications INNER JOIN notifications_comment_tag ON id = notification_id INNER JOIN comment_tags ON notifications_comment_tag.comment_id = comment_tags.comment_id INNER JOIN comments ON comment_tags.comment_id = comments.id INNER JOIN users ON comments.user_id = users.id WHERE notifications.id = ?', [$this->id])[0];
+                // notification:(id, type, created_at) comment:(comment_id, post_id) tagger:(user_id, name, image)
             case 'message': 
-                return $this->join(NotificationMessage::class,'notifications_message.notification_id','=','notifications.id');
+                return DB::select('SELECT notifications.id as id, notifications.type as type, dates as created_at, message_id, messages.user_id as user_id, chat_id, name, image FROM notifications INNER JOIN notifications_message ON id = notification_id INNER JOIN messages ON notifications_message.message_id = messages.id INNER JOIN users ON messages.user_id = users.id WHERE notifications.id = ?', [$this->id])[0];
+                // notification:(id, type, created_at) message:(message_id, text, chat_id) sender:(user_id, name, image)
             case 'comment_reply':
-                return $this->join(NotificationReplyComment::class,'notifications_comment_reply.notification_id','=','notifications.id');
+                return DB::select('SELECT notifications.id as id, notifications.type as type, dates as created_at, user_id, comment_id, post_id, name, image FROM notifications INNER JOIN notifications_comment_reply ON id = notification_id INNER JOIN comments ON notifications_comment_reply.comment_id = comments.id INNER JOIN users ON comments.user_id = users.id WHERE notifications.id = ?', [$this->id])[0];
+                // notification:(id, type, created_at) comment:(comment_id, post_id) commenter:(user_id, name, image)
         }
-        //return $this->morphTo('notifiable','type','id','id');
-
-        /*$this->join('notifications_comment','notifications_comment.notification_id','=','notifications.id')
-            ->join('notifications_post_like','notifications_post_like.notification_id','=','notifications.id')
-            ->join('notifications_comment_like','notifications_comment_like.notification_id','=','notifications.id')
-            ->join('notifications_comment_tag','notifications_comment_tag.notification_id','=','notifications.id')
-            ->join('notifications_message','notifications_message.notification_id','=','notifications.id')
-            ->join('notifications_comment_reply','notifications_comment_reply.notification_id','=','notifications.id');*/
     }
 }

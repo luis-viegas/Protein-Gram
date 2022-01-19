@@ -115,7 +115,6 @@ CREATE TABLE comment_likes(
 CREATE TABLE comment_tags(
   comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE ,
   user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
-  type notification_type NOT NULL,
 	PRIMARY KEY ( comment_id , user_id)
 );
 
