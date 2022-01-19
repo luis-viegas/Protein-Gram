@@ -45,16 +45,17 @@ var message_place = -1;
 for(let i = 0; i< url.length; i++){
     if(url[i]=="messages") message_place=i;
 }
-console.log(message_place);
+
+
 if(message_place>0){
     let chat_id =url[message_place+1];
-    var pusher = new Pusher('74dd497c4f6d496c2f8d', {
+    let pusher = new Pusher('74dd497c4f6d496c2f8d', {
     cluster: 'eu',
     forceTLS: true
     });
 
-    var channel = pusher.subscribe('chat' + chat_id);
-    channel.bind('update', function(data) {
+    let channel = pusher.subscribe('chat' + chat_id);
+    channel.bind('message_update', function(data) {
         let newMessage = document.createElement('div');
         console.log(data.message.text);
         let user_url = document.getElementById("profile-icon-link").href.split('/');
@@ -80,8 +81,26 @@ if(message_place>0){
     });
 }
 
+//--------------------------------------------Real time notification --------
+
+const user_icon = document.getElementById("profile-icon-link");
+if(user_icon != undefined){
+    let user_url = user_icon.href.split('/');
+    let user_id = user_url[user_url.length-1];
+
+    let pusher = new Pusher('74dd497c4f6d496c2f8d', {
+    cluster: 'eu',
+    forceTLS: true
+    });
+
+    let channel = pusher.subscribe('notification' + user_id);
+    channel.bind('notification_update', function(data){
+        console.log(data);
+    });
+}
 
 
+//-------------------------------------------------
 addEventListeners();
 
 

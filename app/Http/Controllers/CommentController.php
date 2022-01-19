@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationUpdate;
 use App\Models\Comment;
 use App\Models\Notification;
 use App\Models\NotificationComment;
@@ -53,6 +54,8 @@ class CommentController extends Controller
         $notification_comment->notification_id=$notification->id;
         $notification_comment->comment_id=$comment->id;
         $notification_comment->save();
+
+        
         $notification->broadcast();
 
         return redirect()->back();

@@ -21,9 +21,13 @@ class NotificationUpdate implements ShouldBroadcast
 
     public $notification;
 
-    public function __construct(Notification $notification)
+    public function __construct($notification)
     {
-        $this->notification = $notification->specific();
+        $this->notification = $notification;
+    }
+
+    public function broadcastWith(){
+        return (array)$this->notification->specific();
     }
 
     public function broadcastOn()
@@ -33,6 +37,6 @@ class NotificationUpdate implements ShouldBroadcast
 
     public function broadcastAs()
     {
-        return 'update';
+        return 'notification_update';
     }
 }
