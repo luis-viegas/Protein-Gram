@@ -57,7 +57,7 @@ Route::post('messages/{chat_id}/send', 'ChatController@createMessage')->name('cr
 //Notifications
 Route::post('notifications/{last_id}','NotificationController@checkNew')->name('check_new_notifications');
 Route::post('notifications','NotificationController@get')->name('get_notifications');
-//Route::get('notifications','NotificationController@get')->name('get_notifications');
+Route::get('notifications','NotificationController@get')->name('get_notifications');
 Route::put('notifications/{last_id}','NotificationController@consume')->name('consume_notifications');
 
 //Administration
