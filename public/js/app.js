@@ -86,38 +86,98 @@ addEventListeners();
 
 function runFuntions(){
 
-    var friendsTab = document.getElementById("friends-list-tab");
-    var friendRequestsTab = document.getElementById("friend-requests-tab");
+    var notifBell = document.getElementsByClassName("fa-bell")[0];
+    var notifTab = document.getElementsByClassName("notifications")[0];
 
-    var friendsPage = document.getElementById("friends-list");
-    var friendRequestsPage = document.getElementsByClassName("friend-requests-list");
-
-    friendsTab.onclick = function(){
-
-        console.log(friendRequestsPage);
-
-        // friendRequestsPage.style = "display: none";
-        friendsPage.style = "display: block";
-
-        if (!friendsTab.classList.contains("active-tab")){
-            friendsTab.classList.add("active-tab");
-            friendRequestsTab.classList.remove("active-tab");
+    notifBell.onclick = function(){
+        if (notifTab.classList.contains("tab-open")){
+            notifTab.classList.remove("tab-open");
+            notifTab.classList.add("tab-closed");
+        }
+        else {
+            notifTab.classList.remove("tab-closed");
+            notifTab.classList.add("tab-open");
         }
     }
 
-    friendRequestsTab.onclick = function(){
-        friendsPage.style = "display: none";
-        friendRequestsPage.style = "display: block";
+    if (window.location.href.indexOf("messages") > -1) {
+        var messageHistory = document.getElementsByClassName("message-history")[0];
+        var messageSendButton = document.getElementById("message_form").lastElementChild;
 
-        if (!friendRequestsTab.classList.contains("active-tab")){
-            friendRequestsTab.classList.add("active-tab");
-            friendsTab.classList.remove("active-tab");
+        var contactsMenu = document.getElementsByClassName("contacts-menu")[0];
+        var messageHistory = document.getElementsByClassName("messages-page-messages")[0];
+        var contactsList = document.getElementsByClassName("contacts-list")[0];
+        var contactsListContacts = document.getElementsByClassName("contacts-list-contacts")[0];
+        var contact = document.getElementsByClassName("contact");
+         
+        messageHistory.scrollTo(0, messageHistory.scrollHeight);
+
+        messageSendButton.onclick = function(){
+            messageHistory.scrollTo(0, messageHistory.scrollHeight);
+        }
+
+        contactsMenu.onclick = function(){
+            
+            if (contactsMenu.classList.contains("menu-closed")){
+                
+                contactsMenu.classList.remove("menu-closed");
+                contactsMenu.classList.add("menu-open");
+
+                messageHistory.classList.add("collapse-history");
+                contactsList.classList.add("expand-contact-list");
+                contactsListContacts.classList.add("expand-contact-list");
+            }
+            else {
+                contactsMenu.classList.add("menu-closed");
+                contactsMenu.classList.remove("menu-open");
+
+                messageHistory.classList.remove("collapse-history");
+                contactsList.classList.remove("expand-contact-list");
+                contactsListContacts.classList.remove("expand-contact-list");
+            }
+
+            
+        }
+
+        contact.addEventListener("click", function(){
+            console.log("CLICKED CONTACT");
+
+            messageHistory.classList.remove("collapse-history");
+            contactsList.classList.remove("expand-contact-list");
+        });
+    }
+
+    if (window.location.href.indexOf("friends") > -1){
+        var friendsTab = document.getElementById("friends-list-tab");
+        var friendRequestsTab = document.getElementById("friend-requests-tab");
+
+        var friendsPage = document.getElementById("friends-list");
+        var friendRequestsPage = document.getElementById("friend-requests-list");
+
+        friendsTab.onclick = function(){
+    
+            friendRequestsPage.style = "display: none";
+            friendsPage.style = "display: block";
+    
+            if (!friendsTab.classList.contains("active-tab")){
+                friendsTab.classList.add("active-tab");
+                friendRequestsTab.classList.remove("active-tab");
+            }
+        }
+    
+        friendRequestsTab.onclick = function(){
+
+            friendsPage.style = "display: none";
+            friendRequestsPage.style = "display: block";
+    
+            if (!friendRequestsTab.classList.contains("active-tab")){
+                friendRequestsTab.classList.add("active-tab");
+                friendsTab.classList.remove("active-tab");
+            }
         }
     }
 
 }
-
-
 
 window.onload = runFuntions();
 

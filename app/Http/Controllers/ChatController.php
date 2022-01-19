@@ -52,11 +52,11 @@ class ChatController extends Controller
     public function show($chat_id){
         $user = Auth::user();
         if(!$user)return redirect("/");
-        $chats = $user->chats()->find($chat_id);
-        $chat = $chats->get();
+        $chats = $user->chats()->get();
+        $chat = $chats->find($chat_id);
         if(!$chat)return redirect("/messages");
-        $messages = $chats->messages()->orderBy('id')->get();
-        return view('pages.messages', ['user'=>$user,'chat'=>$chat,'chats'=>$chats->get(), 'messages'=>$messages ]);
+        $messages = $chat->messages()->orderBy('id')->get();
+        return view('pages.messages', ['user'=>$user,'chat'=>$chat,'chats'=>$chats, 'messages'=>$messages ]);
     }
 
     public function createChat($id){ //TODO
