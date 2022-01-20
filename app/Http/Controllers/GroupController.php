@@ -25,6 +25,7 @@ class GroupController extends Controller
 
     public function show($id) {
         $group = Group::find($id);
+        if(!$group) return redirect("/");
         return view('pages.group', ['group'=> $group]); 
     }
 

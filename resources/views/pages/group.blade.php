@@ -50,7 +50,7 @@
             <ul>                                             
                 @foreach ($group->members as $member )
                 <li >
-                    <img class="grid-image" src={{Auth::user()->image}}>
+                    <img class="grid-image" src={{$member->image}}>
                     </br>
                     <h7>{{$member->name}}</h7>
                 </li>
