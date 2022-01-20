@@ -17,7 +17,7 @@
             @csrf
 
             <button id="group-delete-button" onclick="myFunction()" type="submit" >Delete Group</button>
-            <input type="text" name="id" value="{{$group->id}}" id='delete-group-input'>
+            <input type="text" name="id" value="{{$group->id}}" id='delete-group-input' hidden>
             <script>
             function myFunction() {
             alert("You successfully deleted the Group!");
@@ -27,7 +27,7 @@
 
         <form method="post" action="{{route('renameGroup', $group->id)}}">
             @csrf
-            <input type="text" name="id" value="{{$group->id}}" class="hiden-input">
+            <input type="text" name="id" value="{{$group->id}}" class="hiden-input" hidden>
             <label for="name">Group Name:</label>
             <input type="text" name="name" value="{{$group->name}}" id='rename-group-input'>
             <button id="group-rename-button" type="submit" >Rename Group</button>
