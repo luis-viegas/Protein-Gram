@@ -24,6 +24,7 @@ Route::post('users/{id}', 'PostController@delete')->name('deletePost');
 Route::get('posts/edit/{id}', 'PostController@edit')->name('editPost');
 Route::post('posts/edit/{id}', 'PostController@update')->name('updatePost');
 Route::get('posts/{post_id}', 'PostController@show')->name('viewPost');
+Route::post('posts/{post_id}/like', 'PostController@like');
 
 //Search
 Route::any('search', 'SearchController@search');

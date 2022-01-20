@@ -26,6 +26,16 @@
         </form>
         @endif
     </div>
+    <div id="like_form">
+        @if(Auth::check() )
+        @if(!$post->likes->find(Auth::user()->id)))
+        <button class= "like_button" id="like_b{{ $post->id }}"> Like </button>
+        @endif
+        @endif
+        <div class="like_number" id="like_n{{ $post->id }}"> {{ $post->likes->count()}} </div>
+    </div>
+
+    
 
 
 
