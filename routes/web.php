@@ -51,6 +51,13 @@ Route::get('users/{user_id}/messages/{chat_id}', 'ChatController@show')->name('c
 Route::post('users/{id}/messages', 'ChatController@createChat')->name('createChat');
 Route::post('users/{user_id}/messages/{chat_id}', 'ChatController@createMessage')->name('createMessage');
 
+//Groups
+Route::post('groups/create', 'GroupController@create')->name('createGroup');
+Route::get('users/{id}/groups', 'GroupController@groups')->name('group_page');
+Route::get('groups/{id}', 'GroupController@show')->name('group_profile');
+Route::post('groups/{id}', 'GroupController@delete')->name('deleteGroup');
+Route::post('groups/{id}/rename', 'GroupController@rename')->name('renameGroup');
+
 //Administration
 Route::get('administration','UserController@listAdministration');
 

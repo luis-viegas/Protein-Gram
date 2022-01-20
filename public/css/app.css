@@ -456,3 +456,11 @@ input[type="password"]:focus {
   margin: 0.75em 0 !important;
   align-items: center;
 }
+
+#delete-group-input {
+  display: none;
+}
+
+.hiden-input {
+  display: none;
+}
