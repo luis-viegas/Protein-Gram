@@ -11,6 +11,23 @@
   
     <div id="post-text"><p>{{$post->text}}</p></div>
 
+    <div id="like_form">
+        @if(Auth::check() )
+        @if(!$post->likes->find(Auth::user()->id))
+        <button class= "like_button" id="like_b{{ $post->id }}"><i class="fas fa-thumbs-up"></i></button>
+        @endif
+        @endif
+        <div class="like_number" id="like_n{{ $post->id }}"> 
+            {{ $post->likes->count()}}
+            @if ($post->likes->count() == 1)
+             Like
+             @endif
+             @if ($post->likes->count() != 1)
+             Likes
+             @endif
+            </div>
+    </div>
+
 
     <div id="post-comments">
         @foreach ($post->comments as $comment )
@@ -26,14 +43,7 @@
         </form>
         @endif
     </div>
-    <div id="like_form">
-        @if(Auth::check() )
-        @if(!$post->likes->find(Auth::user()->id)))
-        <button class= "like_button" id="like_b{{ $post->id }}"> Like </button>
-        @endif
-        @endif
-        <div class="like_number" id="like_n{{ $post->id }}"> {{ $post->likes->count()}} </div>
-    </div>
+    
 
     
 

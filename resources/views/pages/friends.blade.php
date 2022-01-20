@@ -15,6 +15,12 @@
                 @isset($friends)
                     @include('partials.friends', ['friends'=>$friends, 'user'=>$user ])    
                 @endisset
+                @if ($friends->count() == 0)
+                    <div class="no-friends">
+                    NO FRIENDS
+                    </div>
+                    
+                @endif
             </div>
 
             @if(Auth::check())
@@ -23,6 +29,12 @@
                 @isset($friendRequests)
                     @include('partials.friendRequests', ['friendRequests'=>$friendRequests, 'user'=>$user ])    
                 @endisset
+                @if ($friendRequests->count() == 0)
+                    <div class="no-friends">
+                    NO FRIEND REQUESTS
+                    </div>
+                    
+                @endif
             </div>
             @endif
             @endif
