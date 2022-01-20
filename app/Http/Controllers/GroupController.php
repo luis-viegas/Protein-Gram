@@ -18,8 +18,8 @@ class GroupController extends Controller
         //$this->authorize('create',Group::class);
         $group->name = $request->input('name');
         $group->save();
-        //$group->members()->attach(Auth::user()-id);
-        //$group->owners()->attach($group->id,Auth::id());
+        $group->members()->attach(Auth::user()-id);
+        $group->owners()->attach($group->id,Auth::id());
         return redirect()->back();
     }
 
