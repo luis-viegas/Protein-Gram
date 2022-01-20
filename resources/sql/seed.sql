@@ -17,16 +17,17 @@ CREATE TABLE users (
   email VARCHAR UNIQUE NOT NULL,
   password VARCHAR NOT NULL,
   birthday TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  is_private BOOLEAN DEFAULT FALSE,
-  is_admin BOOLEAN DEFAULT FALSE,
+  is_private BOOLEAN DEFAULT FALSE NOT NULL,
+  is_admin BOOLEAN DEFAULT FALSE NOT NULL,
   remember_token VARCHAR,
-  image VARCHAR DEFAULT 'https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png',
+  image VARCHAR DEFAULT 'https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png' NOT NULL,
   bio VARCHAR DEFAULT 'Write something about yourself'
 );
 
 CREATE TABLE posts (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  group_id INTEGER REFERENCES groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
   text VARCHAR NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
@@ -55,18 +56,18 @@ CREATE TABLE messages(
 );
 
 CREATE TABLE relationships(
-  id1 INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
-  id2 INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
-  friends BOOLEAN,
-  blocked1 BOOLEAN DEFAULT FALSE,
-  blocked2 BOOLEAN DEFAULT FALSE,
+  id1 INTEGER REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  id2 INTEGER REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  friends BOOLEAN NOT NULL,
+  blocked1 BOOLEAN DEFAULT FALSE NOT NULL,
+  blocked2 BOOLEAN DEFAULT FALSE NOT NULL,
 	PRIMARY KEY (id1 , id2),
   CONSTRAINT id_order CHECK (id1 < id2)
 );
 
 CREATE TABLE friend_requests( 
-  id1 INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
-  id2 INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+  id1 INTEGER REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  id2 INTEGER REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY (id1 , id2),
   CONSTRAINT id_different CHECK (id1 <> id2)
 );
@@ -76,18 +77,18 @@ CREATE TABLE groups(
   name TEXT NOT NULL,
   creationdate TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
   --group_profile_picture INTEGER REFERENCES images(id) ON UPDATE CASCADE,
-  is_private_group BOOLEAN DEFAULT TRUE
+  is_private_group BOOLEAN DEFAULT TRUE NOT NULL
 );
 
 CREATE TABLE group_members(
-  group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE ,
-  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+  group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
 	PRIMARY KEY (group_id , user_id)
 );
 
 CREATE TABLE group_owners(
-  group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE ,
-  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+  group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
 	PRIMARY KEY (group_id , user_id)
 );
 
@@ -102,63 +103,63 @@ CREATE TABLE comments(
 );
 
 CREATE TABLE post_likes(
-  post_id INTEGER REFERENCES posts(id) ON UPDATE CASCADE ,
-  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  post_id INTEGER REFERENCES posts(id) ON UPDATE CASCADE ON DELETE CASCADE,
   type like_type NOT NULL,
 	PRIMARY KEY (post_id , user_id)
 );
 
 CREATE TABLE comment_likes(
-  comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE ,
-  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+  comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
   type like_type NOT NULL,
 	PRIMARY KEY ( comment_id , user_id)
 );
 
 CREATE TABLE comment_tags(
-  comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE ,
-  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ,
+  comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
 	PRIMARY KEY ( comment_id , user_id)
 );
 
 CREATE TABLE notifications(
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE NOT NULL,
+    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE NOT NULL ON DELETE CASCADE,
     dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     type notification_type NOT NULL,
     consumed boolean NOT NULL DEFAULT false
 );
 
 CREATE TABLE notifications_comment(
-    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
-    comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE NOT NULL
+    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE ON DELETE CASCADE PRIMARY KEY,
+    comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE notifications_post_like(
     notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
-    post_id INTEGER REFERENCES posts(id) ON UPDATE CASCADE NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE NOT NULL
+    post_id INTEGER REFERENCES posts(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE notifications_comment_like(
     notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
-    comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE NOT NULL
+    comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE notifications_comment_tag(
-    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
-    comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE NOT NULL
+    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE ON DELETE CASCADE PRIMARY KEY,
+    comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE notifications_comment_reply(
-    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
-    comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE NOT NULL
+    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE ON DELETE CASCADE PRIMARY KEY,
+    comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE notifications_message(
-    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
-    message_id INTEGER REFERENCES messages(id) ON UPDATE CASCADE NOT NULL
+    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE ON DELETE CASCADE PRIMARY KEY,
+    message_id INTEGER REFERENCES messages(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL
 );
 
 
@@ -241,32 +242,6 @@ CREATE TRIGGER user_search_update
 CREATE INDEX users_search_idx ON users USING GIN (tsvectors);
 
 
-
-CREATE FUNCTION befriending() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF EXISTS(SELECT * FROM friend_requests WHERE NEW.id1 = id2 AND NEW.id2 = id1) 
-    THEN
-        INSERT INTO relationships VALUES (NEW.id1, NEW.id2, TRUE, FALSE);
-        INSERT INTO relationships VALUES (NEW.id2, NEW.id1, TRUE, FALSE);
-        DELETE FROM friend_requests WHERE id1 = NEW.id2 AND id2 = NEW.id1;
-        DELETE FROM friend_requests WHERE id1 = NEW.id1 AND id2 = NEW.id2;
-    END IF;
-    RETURN NEW;
-
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER befriending
-    AFTER INSERT ON friend_requests
-    FOR EACH ROW
-    EXECUTE PROCEDURE befriending();
-
-
-
-
-
 -- Population 
 
 INSERT INTO users VALUES (
@@ -288,27 +263,6 @@ INSERT INTO users VALUES (
   TRUE
 ); -- Password is 1234. Generated using Hash::make('1234')
 
-/*
-SELECT * FROM notifications
-INNER JOIN 
-  (CASE
-    WHEN type='comment' THEN
-      notifications_comment
-    WHEN type='post_like' THEN
-      notifications_post_like
-    WHEN type='comment_like' THEN
-      notifications_comment_like
-    WHEN type='comment_tag' THEN
-      notifications_comment_tag
-    WHEN type='message' THEN
-      notifications_message
-    WHEN type='comment_reply' THEN
-      notifications_comment_reply
-    ELSE
-      notifications
-    END) as table2
-ON notifications.id = table2.notification_id
-*/
 /* TODO: 
 
 CREATE TABLE images(
