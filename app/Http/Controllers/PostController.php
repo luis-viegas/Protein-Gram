@@ -38,7 +38,7 @@ class PostController extends Controller
         $post->user_id = Auth::id();
 
         $post->save();
-        return redirect('/');
+        return redirect()->back();
     }
     public function edit($id){
         $user = Auth::user();
@@ -64,5 +64,16 @@ class PostController extends Controller
 
         $post->delete();
         return redirect('users/'.Auth::id());
+    }
+
+    public function like($post_id){
+        $post = Post::find($post_id);
+        $user = Auth::user();
+        if(!$user){return redirect()->back();}
+
+        $post->likes()->attach($user->id, ['type' => 'LIKE']);
+
+        return 0;
+
     }
 }

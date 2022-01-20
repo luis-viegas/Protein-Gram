@@ -1,9 +1,15 @@
 
 function addEventListeners(){
     const message_form = document.getElementById("message_form");
+    const like_buttons= document.querySelectorAll(".like_button");
 
     if(message_form!=null){
         message_form.addEventListener('submit', sendMessage);
+    }
+
+    if(like_buttons!=null){
+        console.log(like_buttons);
+        like_buttons.forEach(function(button){button.addEventListener('click', addLike);});
     }
     
 }
@@ -23,6 +29,7 @@ function sendAjaxRequest(method, url, data, handler) {
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     request.addEventListener('load', handler);
     request.send(encodeForAjax(data));
+    
 }
 
 
@@ -33,6 +40,21 @@ function sendMessage(event){
     event.preventDefault();
     message_text.value='';
 }
+
+function addLike(){
+    let post_id = this.id.split('b')[1];
+
+    sendAjaxRequest('post', "/posts/"+post_id+"/like",{id: post_id},null);
+
+    let likes = document.getElementById("like_n"+post_id);
+
+    let new_likes = parseInt(likes.textContent ) + 1;
+    likes.textContent = new_likes;
+
+    document.getElementById('like_b'+ post_id).style.display='none';
+
+}
+
 
 
 
