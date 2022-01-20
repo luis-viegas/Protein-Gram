@@ -61,11 +61,11 @@ class GroupController extends Controller
         return redirect('groups/'.$group->id);
     }
 
-    public function join(Request $request , $group_id) {
+    public function join(Request $request) {
         $id = $request->input('id');
         $group = Group::find($id);
         $group->members()->attach(Auth::user()->id);
-        return redirect('groups/{{$group_id}}');
+        return redirect('groups/'.$group->id);
         
     }
 
@@ -73,7 +73,6 @@ class GroupController extends Controller
         $id = $request->input('id');
         $group = Group::find($id);
         $group->members()->detach(Auth::user()->id);
-        $group->members()->delete(Auth::user()->id);
         return redirect()->route('groups_page', ['id' => Auth::user()->id]);
         
     }
