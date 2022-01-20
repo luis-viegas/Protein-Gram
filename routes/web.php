@@ -19,12 +19,14 @@ Route::get('/', 'PostController@publicTimeline') -> name('public timeline'); //M
 
 //Posts
 Route::post('posts/create', 'PostController@create')->name('createPost');
-Route::get('posts/create', 'PostController@creationForm');
-Route::post('users/{id}', 'PostController@delete')->name('deletePost');
+Route::get('posts/create', 'PostController@creationForm')->name('create_post_form');
+Route::post('posts/delete', 'PostController@delete')->name('delete_post');
+Route::post('users/{id}/posts/delete', 'PostController@delete')->name('delete_post_admin');
 Route::get('posts/edit/{id}', 'PostController@edit')->name('editPost');
-Route::post('posts/edit/{id}', 'PostController@update')->name('updatePost');
+Route::post('posts/edit', 'PostController@update')->name('update_post');
+Route::post('users/{id]/posts/edit', 'PostController@update')->name('update_post_admin');
 Route::get('posts/{post_id}', 'PostController@show')->name('viewPost');
-Route::post('posts/{post_id}/like', 'PostController@like');
+Route::post('posts/{post_id}/like', 'PostController@like')->name('like_post');
 
 //Search
 Route::any('search', 'SearchController@search');

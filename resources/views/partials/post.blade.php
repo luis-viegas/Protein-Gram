@@ -47,7 +47,7 @@
 
     @if(Auth::check() )
         @if(Auth::user()->is_admin || Auth::id()== $post->user_id)
-        <form method="post" action="{{route('deletePost', $post->user_id)}}">
+        <form method="post" action="{{ Auth::user()->is_admin ? route('delete_post_admin', $post->user_id) : route('delete_post') }}">
             @csrf
             <input type="text" name="id" value="{{$post->id}}" id='delete-post-input'>
             <button id="post-delete-button" onclick="myFunction()" type="submit" >Delete </button>

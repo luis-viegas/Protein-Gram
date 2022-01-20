@@ -31,12 +31,12 @@ class PostController extends Controller
     }
 
     public function create(Request $request){
-
+        $user = Auth::user();
+        if(!$user) return redirect()->back();
         $post = new Post();
         $this->authorize('create',Post::class);
         $post->text = $request->input('text');
         $post->user_id = Auth::id();
-
         $post->save();
         return redirect()->back();
     }
@@ -46,33 +46,38 @@ class PostController extends Controller
             return view('pages.editPost', ['post' => Post::find($id)]);
         return redirect()->back();
     }
-    public function update(Request $request, $id){
+    public function update(Request $request, $id = null){
+        $auth = Auth::user();
+        if(!$auth) return redirect()->back();
+        $user = $auth->is_admin && isset($id) ? User::find($id) : $auth;
+        if(!$user) return redirect()->back();
+        $post = $user->posts->find($request->input('id'));
+        if(!$post) return redirect()->back();
 
-        $post = Post::find($id);
         $this->authorize('update',$post);
         $post->text = $request->input('text');
-
         $post->save();
-        return redirect('users/'.Auth::id());
-
+        return redirect('/posts/'.$post->id);
     }
 
-    public function delete(Request $request){
-        $id = $request->input('id');
-        $post = Post::find($id);
+    public function delete(Request $request, $user_id = null){
+        $auth = Auth::user();
+        if(!$auth) return redirect()->back();
+        $user = $auth->is_admin && isset($user_id) ? User::find($user_id) : $auth;
+        if(!$user) return redirect()->back();
+        $post = $user->posts->find($request->input('id'));
+        if(!$post) return redirect()->back();
         $this->authorize('delete',$post);
-
         $post->delete();
-        return redirect('users/'.Auth::id());
+        return redirect()->back(); //TODO: check if appropriate.
     }
 
-    public function like($post_id){
-        $post = Post::find($post_id);
+    public function like(Request $request, $post_id = null){
         $user = Auth::user();
-        if(!$user){return redirect()->back();}
-
+        if(!$user) return redirect()->back();
+        $post = $user->posts->find($post_id?:$request->input('id'));
+        if(!$post)return redirect()->back();
         $post->likes()->attach($user->id, ['type' => 'LIKE']);
-
         return 0;
 
     }

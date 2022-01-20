@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<form method="POST" action="{{ route('updatePost', $post->id) }}">
+<form method="POST" action="{{ Auth::user()->is_admin? route('update_post_admin', $post->user_id) : route('update_post') }}">
     {{ csrf_field() }}
-
+    <input id="id" type="text" name="id" value="{{$post->id}}" hidden>
     <label for="text">Update Post's text</label>
     <input id="text" type="text" name="text" value="{{$post->text}}" required autofocus>
 
