@@ -17,10 +17,9 @@
                 @endisset
             </div>
 
-            <hr>
             @if(Auth::check())
             @if(Auth::user()->id == $user->id)
-            <div class="friend-requests-list">
+            <div id="friend-requests-list">
                 @isset($friendRequests)
                     @include('partials.friendRequests', ['friendRequests'=>$friendRequests, 'user'=>$user ])    
                 @endisset

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationUpdate;
 use App\Models\Comment;
+use App\Models\Notification;
+use App\Models\NotificationComment;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +31,8 @@ class CommentController extends Controller
     }   
 
     public function create($post_id, Request $request){
+        $user = Auth::user();
+        if(!$user) return redirect()->back();
         $comment = new Comment();
 
         //authorize('create',$post_id);
@@ -37,11 +42,25 @@ class CommentController extends Controller
         }
 
         $comment->message = $request->input('message');
-        $comment->user_id = Auth::id();
+        $comment->user_id = $user->id;
         $comment->post_id = $post_id;
         $comment->reply_to = null;
 
         $comment->save();
+
+
+        if(Post::find($post_id)->user_id != $user->id){
+            $notification = new Notification();
+            $notification->user_id = Post::find($post_id)->poster()->first()->id;
+            $notification->type = 'comment';
+            $notification->save();
+            $notification_comment = new NotificationComment();
+            $notification_comment->notification_id=$notification->id;
+            $notification_comment->comment_id=$comment->id;
+            $notification_comment->save();
+            $notification->broadcast();
+        }
+
 
         return redirect()->back();
     }

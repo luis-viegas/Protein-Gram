@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-//use App\Models\User;
 use App\Http\Controllers\Controller;
 use Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UserController;
-
 use App\Models\User;
 
 class SearchController extends Controller

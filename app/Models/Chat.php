@@ -20,6 +20,6 @@ class Chat extends Model
      * Messages in the chat
      */
     public function messages(){
-        return $this->hasMany(Message::class);
+        return $this->hasMany(Message::class,'chat_id','id');
     }
 }

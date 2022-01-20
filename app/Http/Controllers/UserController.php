@@ -12,24 +12,21 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     public function show($id){
-
         $user = User::find($id);
-        //if (user==null) return view( Invalid user)
-        //TODO: check if user exists.
+        $auth = Auth::user();
+        if (!$user) return redirect("");
         $posts = $user->posts()
                       ->orderBy('id','desc')
                       ->get();
-
         if($user->is_private==false){
             return view('pages.user', ['user'=> $user, 'posts' => $posts]);
         }
-        else if(Auth::check()){
-            if(Auth::user()->is_admin){
+        else{
+            if($auth && ($auth->is_admin || $id == $auth->id || $auth->isFriend($id))){
                 return view('pages.user', ['user'=> $user, 'posts' => $posts]);
-            }   
+            }
             return view('pages.private_user',['user'=>$user]);
         }
-        
     }
 
     public function listAdministration(){
@@ -46,30 +43,23 @@ class UserController extends Controller
         $user-> password = bcrypt($request->input('password'));
         $user-> is_admin = $request->input('is_admin');
         $user-> is_private = $request->input('is_private');
-
         $user->save();
-
         return $user;
     }
 
     public function update(Request $request, $id){
-
+        
         $user = User::find($id);
         $this->authorize('update',$user);
         $user-> name = $request->input('name');
         $user-> is_admin = $request->boolean('is_admin');
         $user-> is_private = $request->boolean('is_private');
-
         $new_image = $request->input('image');
-
         if($new_image!=''){
             $user-> image = $new_image;
         }
-
         $user-> bio = $request->input('bio');
-
         $user->save();
-
         return redirect('/users/'.$user->id);
     }
 
@@ -99,37 +89,38 @@ class UserController extends Controller
         
     }
 
-    public function friends($id){
-        $user = User::find($id);
-
-        $friends = $user->relationships()->get();
-        $friendRequests = $user->friendRequestsReceived()->get();
-
-        return view('pages.friends',['user'=>$user, 'friends'=>$friends, 'friendRequests'=>$friendRequests]);
+    public function friends(){
+        $user = Auth::user();
+        if(!$user) return redirect("/");
+        return view('pages.friends',[
+            'user'=> $user, 
+            'friends'=> $user->friends(),
+            'friendRequests'=> $user->friendRequestsReceived()->get()
+        ]);
     }
 
 
-    public function createFriendRequest($id){
-        $user = User::find($id);
-
-        $user->friendRequestsReceived()->attach(Auth::user()->id);
+    public function createFriendRequest(Request $request){
+        $user = Auth::user();
+        if($user){
+            $user->makeFriendRequest($request->input("friend_request_id"));
+        }
         return redirect()->back();
     }
 
     public function removeFriendRequest(Request $request){
-        $user = User::find(Auth::user()->id);
-
-        $user->friendRequestsReceived()->detach($request->input('friend_request_id'));
+        $user = Auth::user();
+        if($user){
+            $user->removeFriendRequest($request->input("friend_request_id"));
+        }
         return redirect()->back();
     }
 
     public function removeFriend(Request $request){
-        $user = User::find(Auth::user()->id);
-        $friend = User::find($request->input('friend_request_id'));
-
-        $user->relationship()->detach($friend);
-        $friend->relationship()->detach($user);
-
+        $user = Auth::user();
+        if($user){
+            $user->removeFriend($request->input("friend_id"));
+        }
         return redirect()->back();
     }
 
