@@ -1,0 +1,29 @@
+.groups-wrapper {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: 40% 60%;
+}
+
+.groups-wrapper .info {
+  text-align: center;
+}
+
+.users-grid {
+  width: 70%;
+  margin-left: 15%;
+}
+
+.users-grid ul {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+}
+
+.users-grid ul li {
+  list-style: none;
+  flex: 0 0 33.333333%;
+}
+
+.grid-image {
+  width: 85%;
+}

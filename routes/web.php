@@ -69,10 +69,12 @@ Route::put('notifications/{last_id}','NotificationController@consume')->name('co
 
 //Groups
 Route::post('groups/create', 'GroupController@create')->name('createGroup');
-Route::get('users/{id}/groups', 'GroupController@groups')->name('group_page');
+Route::get('groups', 'GroupController@groups')->name('groups_page');
 Route::get('groups/{id}', 'GroupController@show')->name('group_profile');
 Route::post('groups/{id}', 'GroupController@delete')->name('deleteGroup');
 Route::post('groups/{id}/rename', 'GroupController@rename')->name('renameGroup');
+Route::post('groups/{id}/join', 'GroupController@join')->name('joinGroup');
+Route::post('groups/{id}/leave', 'GroupController@leave')->name('leaveGroup');
 
 //Administration
 Route::get('administration','UserController@listAdministration')->name('show_all_users');
