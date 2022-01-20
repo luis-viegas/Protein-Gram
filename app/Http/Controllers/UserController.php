@@ -89,8 +89,10 @@ class UserController extends Controller
         
     }
 
-    public function friends(){
-        $user = Auth::user();
+    public function friends($id){
+        $auth = Auth::user();
+        if(!$auth) return redirect("/");
+        $user = $auth->is_admin && $id?User::find($id) : $auth;
         if(!$user) return redirect("/");
         return view('pages.friends',[
             'user'=> $user, 
@@ -98,7 +100,6 @@ class UserController extends Controller
             'friendRequests'=> $user->friendRequestsReceived()->get()
         ]);
     }
-
 
     public function createFriendRequest(Request $request){
         $user = Auth::user();
