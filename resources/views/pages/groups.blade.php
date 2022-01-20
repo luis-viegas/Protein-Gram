@@ -5,20 +5,34 @@
 @section('content')
 <section class="groups-page" id='groups-page'>
 @if (Auth::check())
-<form method="POST" action="{{ route('createGroup') }}">
-@csrf
-    {{ csrf_field() }}
+<div class="group-creation">
+    <form method="POST" action="{{ route('createGroup') }}">
+    @csrf
+        {{ csrf_field() }}
+        <label for="name">Create a new Group:</label>
+        <input class='new-group-input' type="text" name="name" placeholder="What do you want to call your new group, {{$user->name}}?">
 
-    <input type="text" name="name" placeholder="What are you thinking about, {{$user->name}}">
-
-    <button type="submit" class="invisible-button">
-        Create Post
-    </button>
-</form>
+        <button type="submit" class="invisible-button">
+            Create Post
+        </button>
+    </form>
+</div>
 @endif
-</section>
 
-@foreach ($groups as $group )
-    <p><a href="/groups/{{$group->id}}">{{$group->name}}</p>
-  @endforeach
+<h2>My groups:</h2>
+<p>To be done</p>
+
+<h2>All groups:</h2>
+<div>
+    <ul>
+    @foreach ($groups as $group )
+    <li class="no-dots">
+        <a href="/groups/{{$group->id}}">{{$group->name}}</a>
+    </li>
+    @endforeach
+    </ul>
+</div>
+
+
+</section>
 @endsection

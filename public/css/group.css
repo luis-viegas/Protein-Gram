@@ -1,3 +1,7 @@
+.groups-page {
+  padding: 30px;
+}
+
 .groups-wrapper {
   margin-top: 30px;
   display: grid;
@@ -26,4 +30,8 @@
 
 .grid-image {
   width: 85%;
+}
+
+.group-creation {
+  width: 50%;
 }
