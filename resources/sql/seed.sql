@@ -9,7 +9,7 @@ DROP FUNCTION IF EXISTS befriending CASCADE;
 DROP FUNCTION IF EXISTS users_search_update CASCADE;
 
 CREATE TYPE like_type AS ENUM ('BUMP_FIST', 'LIKE', 'FLEXING', 'WEIGHTS', 'EGG');
-CREATE TYPE notification_type AS ENUM ('comment', 'post_like','comment_like','comment_tag','message','comment_reply');
+CREATE TYPE notification_type AS ENUM ('comment', 'post_like','comment_like','comment_tag','message','comment_reply','friend_request','friend');
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -138,13 +138,13 @@ CREATE TABLE notifications_comment(
 );
 
 CREATE TABLE notifications_post_like(
-    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
+    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE ON DELETE CASCADE PRIMARY KEY,
     post_id INTEGER REFERENCES posts(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE notifications_comment_like(
-    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE PRIMARY KEY,
+    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE ON DELETE CASCADE PRIMARY KEY,
     comment_id INTEGER REFERENCES comments(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL
 );
@@ -162,6 +162,15 @@ CREATE TABLE notifications_comment_reply(
 CREATE TABLE notifications_message(
     notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE ON DELETE CASCADE PRIMARY KEY,
     message_id INTEGER REFERENCES messages(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL
+);
+
+CREATE TABLE notifications_friend_request(
+    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE ON DELETE CASCADE PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL
+);
+CREATE TABLE notifications_friend(
+    notification_id INTEGER REFERENCES notifications(id) ON UPDATE CASCADE ON DELETE CASCADE PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL
 );
 
 

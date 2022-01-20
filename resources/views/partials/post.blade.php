@@ -19,9 +19,10 @@
             @endif
         @endforeach
         @if(Auth::check() )
-        <form class = "create-comment" method="post" action="{{route("create_comment",$post->id)}}">
+        <form class = "create-comment" method="post" action="{{route('create_comment')}}">
             @csrf
             <input type="text" name="message" placeholder="new comment">
+            <input type="hidden" id="post_id" name="post_id" value="{{$post->id}}" hidden>
             <input class="button" type="submit" value="New Comment">
         </form>
         @endif

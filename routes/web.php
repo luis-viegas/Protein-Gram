@@ -40,14 +40,10 @@ Route::get('users/edit/{id}', 'UserController@updateForm');
 Route::get('users/{id}', 'UserController@show')->name('show_user');  //view profile
 
 //Comment
-Route::post('posts/{id}/comments', 'CommentController@create')->name('create_comment');
-Route::post('posts/{post_id}/comments/{comment_id}/responses','CommentController@createResponse')->name('create_response');
+Route::post('comments', 'CommentController@create')->name('create_comment');
 
 //Friend Requests
 Route::get('users/{id}/friends', 'UserController@friends')->name('friends');
-Route::post('users/{id}/friends/friend_requests','UserController@createFriendRequest')->name('create_friend_request');
-Route::post('users/{id}/friends/friend_requests/delete','UserController@removeFriendRequest')->name('remove_friend_request');
-Route::post('users/{id}/friends/delete','UserController@removeFriend')->name('remove_friend');
 Route::get('friends', 'UserController@friends')->name('friends');
 Route::post('friends/friend_requests','UserController@createFriendRequest')->name('create_friend_request');
 Route::post('friends/friend_requests/delete','UserController@removeFriendRequest')->name('remove_friend_request');
@@ -69,10 +65,12 @@ Route::put('notifications/{last_id}','NotificationController@consume')->name('co
 
 //Groups
 Route::post('groups/create', 'GroupController@create')->name('createGroup');
-Route::get('users/{id}/groups', 'GroupController@groups')->name('group_page');
+Route::get('groups', 'GroupController@groups')->name('groups_page');
 Route::get('groups/{id}', 'GroupController@show')->name('group_profile');
 Route::post('groups/{id}', 'GroupController@delete')->name('deleteGroup');
 Route::post('groups/{id}/rename', 'GroupController@rename')->name('renameGroup');
+Route::post('groups/{id}/join', 'GroupController@join')->name('joinGroup');
+Route::post('groups/{id}/leave', 'GroupController@leave')->name('leaveGroup');
 
 //Administration
 Route::get('administration','UserController@listAdministration')->name('show_all_users');

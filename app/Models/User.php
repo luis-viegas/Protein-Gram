@@ -190,26 +190,29 @@ class User extends Authenticatable
             ->get()
             ->isEmpty())
         {
-            DB::table('friend_requests')
-                ->insertOrIgnore([
-                    'id1' => $this->id,
-                    'id2' => $friend_id
-                ]);
+            return
+                DB::table('friend_requests')
+                    ->insertOrIgnore([
+                        'id1' => $this->id,
+                        'id2' => $friend_id
+                    ]) ? 'sent':'failed';
         }else{
             $this->removeFriendRequest($friend_id);
-            DB::table('relationships')
-                ->updateOrInsert([
-                    'id1' => $friend_id < $this->id ? $friend_id : $this->id,
-                    'id2' => $friend_id > $this->id ? $friend_id : $this->id
-                ],['friends'=>'true']);
+            return 
+                DB::table('relationships')
+                    ->updateOrInsert([
+                        'id1' => $friend_id < $this->id ? $friend_id : $this->id,
+                        'id2' => $friend_id > $this->id ? $friend_id : $this->id
+                    ],['friends'=>'true']) ? 'friends':'failed';
         }
+        return 'failed';
     }
     public function removeFriendRequest($friend_id)
     {
-        DB::table('friend_requests')
+        return DB::table('friend_requests')
             ->whereRaw('(id1 IN (?,?))',[$this->id,$friend_id])
             ->whereRaw('(id2 IN (?,?))',[$this->id,$friend_id])
-            ->delete();
+            ->delete() == 0 ? 'failed':'deleted';
     }
     public function sentFriendRequest($user2_id)
     {
