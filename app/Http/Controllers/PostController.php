@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +41,20 @@ class PostController extends Controller
         $post->save();
         return redirect()->back();
     }
+
+    public function groupCreate(Request $request){
+        $user = Auth::user();
+        if(!$user) return redirect()->back();
+        $post = new Post();
+        $this->authorize('create',Post::class);
+        $post->text = $request->input('text');
+        $post->user_id = Auth::id();
+        $group = Group::find($request->input('id'));
+        $post->group_id = $request->input('id');
+        $post->save();
+        return redirect()->back();
+    }
+
     public function edit($id){
         $user = Auth::user();
         if($user->is_admin || $user->id == Post::find($id)->user_id)

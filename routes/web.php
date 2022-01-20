@@ -20,6 +20,7 @@ Route::get('/', 'PostController@publicTimeline') -> name('public timeline'); //M
 //Posts
 Route::post('posts/create', 'PostController@create')->name('createPost');
 Route::get('posts/create', 'PostController@creationForm')->name('create_post_form');
+Route::post('/groups/{id}/posts/create', 'PostController@groupCreate')->name('createGroupPost');
 Route::post('posts/delete', 'PostController@delete')->name('delete_post');
 Route::post('users/{id}/posts/delete', 'PostController@delete')->name('delete_post_admin');
 Route::get('posts/edit/{id}', 'PostController@edit')->name('editPost');

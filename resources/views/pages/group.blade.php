@@ -58,7 +58,12 @@
             </ul>
             </div>
         </div>
-        <div class="posts">posts</div>
+        <div class="posts">
+            @include('partials.new_groupPost')
+            @foreach ($group->posts as $post )
+            @include('partials.post', ['post'=> $post])
+            @endforeach
+        </div>
     </div>
         
     
