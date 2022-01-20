@@ -24,6 +24,14 @@ CREATE TABLE users (
   bio VARCHAR DEFAULT 'Write something about yourself'
 );
 
+CREATE TABLE groups(
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  creationdate TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+  --group_profile_picture INTEGER REFERENCES images(id) ON UPDATE CASCADE,
+  is_private_group BOOLEAN DEFAULT TRUE NOT NULL
+);
+
 CREATE TABLE posts (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -72,13 +80,7 @@ CREATE TABLE friend_requests(
   CONSTRAINT id_different CHECK (id1 <> id2)
 );
 
-CREATE TABLE groups(
-  id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
-  creationdate TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-  --group_profile_picture INTEGER REFERENCES images(id) ON UPDATE CASCADE,
-  is_private_group BOOLEAN DEFAULT TRUE NOT NULL
-);
+
 
 CREATE TABLE group_members(
   group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -124,7 +126,7 @@ CREATE TABLE comment_tags(
 
 CREATE TABLE notifications(
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE NOT NULL ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
     dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     type notification_type NOT NULL,
     consumed boolean NOT NULL DEFAULT false
