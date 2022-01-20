@@ -11,7 +11,7 @@
           <h5 class="user-field"> {{$user->email}}</h5>
           <p class="user-field"> {{$user->bio}}</p>
           <div class="user-short-links">
-            <a class="user-groups">GROUPS</a>
+            <a class="user-groups" href="/users/{{$user->id}}/groups">GROUPS</a>
             @if(Auth::check() && Auth::user()->id == $user->id)
               <a class="user-messages" href="/messages">MESSAGES</a>
             @endif
