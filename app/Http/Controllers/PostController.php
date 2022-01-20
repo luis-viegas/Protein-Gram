@@ -12,10 +12,10 @@ class PostController extends Controller
 {
 
     public function show($id){
-
         $post = Post::find($id);
-        $user = $post->user();
-        return view('partials.post', ['post'=>$post, 'user'=>$user]);
+        if($post->poster()->first()->is_private)
+            return redirect('/');
+        return view('pages.mainPage', ['posts'=>['0'=>$post],'showNewPost'=>False]);
     }
 
     public function publicTimeline(){
@@ -38,9 +38,14 @@ class PostController extends Controller
         $post->user_id = Auth::id();
 
         $post->save();
-        return redirect('/');
+        return redirect()->back();
     }
-
+    public function edit($id){
+        $user = Auth::user();
+        if($user->is_admin || $user->id == Post::find($id)->user_id)
+            return view('pages.editPost', ['post' => Post::find($id)]);
+        return redirect()->back();
+    }
     public function update(Request $request, $id){
 
         $post = Post::find($id);
@@ -59,5 +64,16 @@ class PostController extends Controller
 
         $post->delete();
         return redirect('users/'.Auth::id());
+    }
+
+    public function like($post_id){
+        $post = Post::find($post_id);
+        $user = Auth::user();
+        if(!$user){return redirect()->back();}
+
+        $post->likes()->attach($user->id, ['type' => 'LIKE']);
+
+        return 0;
+
     }
 }

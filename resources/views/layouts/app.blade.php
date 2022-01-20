@@ -19,8 +19,10 @@
         // Fix for Firefox autofocus CSS bug
         // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
     </script>
-    <script type="text/javascript" src={{ asset('js/app.js') }} defer>
-</script>
+    <script type="text/javascript" src={{ asset('js/app.js') }} defer> </script>
+    <script src="https://kit.fontawesome.com/6eab2549cc.js" crossorigin="anonymous"></script>
+  <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+
   </head>
   <body>
     <main>
@@ -42,10 +44,21 @@
             </div>
 
           </div>
-
+          @if (Auth::check())
+          <div class="grid-menu-item">
+            <div class="corner-grid"><div id="notification-tab">
+              <i class="fas fa-bell"></i>
+              <div class="notifications tab-closed">
+                @include('partials.notifications', ['notifications'=> Auth::user()->notifications()->orderBy('id','desc')->limit(10)->get()])
+              </div>
+            </div>
+          </div>
+          </div>
+          @endif
           <div class='grid-menu-item'>
             @if (Auth::check())
             <div id="corner-grid">
+            
             <div id="profile-icon-div">
               <a id="profile-icon-link" href="{{ url('/users/'.Auth::user()->id) }}">
                 <img id='profile-icon' src={{Auth::user()->image}}>

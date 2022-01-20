@@ -5,27 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class NotificationComment extends Model
+class NotificationTagComment extends Model
 {
-    protected $table = 'notifications_comment';
-    public $timestamps = false;
+    protected $table = 'notifications_comment_tag';
     protected $primaryKey = 'notification_id';
-    protected $fillable = ['notification_id', 'comment_id',];
+    public $timestamps = false;
 
-    /**
-     * Notification this refers to
-     */
     public function notification()
     {
         return $this->belongsTo(Notification::class,'id','id','notification');
     }
 
-    /**
-     * Comment this notification refers to
-     */
     public function comment()
     {
         return $this->belongsTo(Comment::class,'comment_id','id');
     }
-    
 }
