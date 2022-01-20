@@ -126,7 +126,7 @@ CREATE TABLE notifications(
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE NOT NULL,
     dates TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     type notification_type NOT NULL,
-    consumed boolean NOT NULL DEFAULT false;
+    consumed boolean NOT NULL DEFAULT false
 );
 
 CREATE TABLE notifications_comment(
@@ -240,25 +240,6 @@ CREATE TRIGGER user_search_update
 
 CREATE INDEX users_search_idx ON users USING GIN (tsvectors);
 
-
-CREATE FUNCTION add_post_like_notification() RETURNS TRIGGER AS
-$BODY$
-
-BEGIN
-    INSERT INTO notifications(iduser)
-	SELECT posts.user_id FROM posts
-    WHERE posts.id = NEW.post_id;
-
-    INSERT INTO notifications_post_like 
-	SELECT MAX(id) FROM notifications,
-    NEW.post_id, NEW.user_id;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER add_post_like_notification
-    AFTER INSERT ON post_likes
-    EXECUTE PROCEDURE add_post_like_notification();
 
 
 CREATE FUNCTION befriending() RETURNS TRIGGER AS

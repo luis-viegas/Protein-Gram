@@ -49,6 +49,9 @@
           </div>
         </div>
         <div class='posts_item'>
+          @if (Auth::check() )
+          @include('partials.new_post')
+          @endif
           <section class="profile-timeline" id="profile timeline">
           @foreach ($posts as $post )
           @include('partials.post', ['post'=> $post])
