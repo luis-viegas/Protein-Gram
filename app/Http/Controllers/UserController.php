@@ -89,11 +89,18 @@ class UserController extends Controller
         
     }
 
-    public function friends($id){
+    public function friends($id=null){
         $auth = Auth::user();
         if(!$auth) return redirect("/");
-        $user = $auth->is_admin && $id?User::find($id) : $auth;
-        if(!$user) return redirect("/");
+        $user = null;
+        if($id==null){
+            $user = $auth;
+        }else{
+            if(!$auth->is_admin)
+                return redirect("/friends");
+            $user = User::find($id);
+            if(!$user) return redirect("/");
+        }
         return view('pages.friends',[
             'user'=> $user, 
             'friends'=> $user->friends(),

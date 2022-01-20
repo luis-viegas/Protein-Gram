@@ -1,31 +1,29 @@
 <article>
-
     <div id="friend-requests">
         @foreach($friendRequests as $friendRequest)
-        <div class="friend-request-card">
-            <img class="post-profile-image" src={{$friendRequest->image}}>
-            <a href="{{route('show_user',$friendRequest->id)}}">{{$friendRequest->name}}</a>
-            <div>{{$friendRequest->email}}</div>
-            @if(Auth::check())
-                @if(Auth::user()->id == $user->id)
-                <div class="request-answer">
-                    <form method="post" action="{{route('remove_friend_request')}}">
-                        @csrf
-                        <input type="text" name="friend_request_id" value="{{$friendRequest->id}}" hidden >
-                        <button type="submit" >Delete </button>
-                    </form>
+            <div class="friend-request-card">
+                <img class="post-profile-image" src={{$friendRequest->image}}>
+                <a href="{{route('show_user',$friendRequest->id)}}">{{$friendRequest->name}}</a>
+                <div>{{$friendRequest->email}}</div>
+                @if(Auth::check())
+                    @if(Auth::user()->id == $user->id)
+                    <div class="request-answer">
+                        <form method="post" action="{{route('remove_friend_request')}}">
+                            @csrf
+                            <input type="text" name="friend_request_id" value="{{$friendRequest->id}}" hidden >
+                            <button type="submit" >Delete </button>
+                        </form>
 
-                    <form method="post" action="{{route('create_friend_request', $friendRequest->id)}}">
-                        @csrf
-                        <input type="text" name="friend_request_id" value="{{$friendRequest->id}}" hidden >
-                        <button type="submit" >Accept </button>
-                    </form>
-                </div>
-                
+                        <form method="post" action="{{route('create_friend_request')}}">
+                            @csrf
+                            <input type="text" name="friend_request_id" value="{{$friendRequest->id}}" hidden >
+                            <button type="submit" >Accept </button>
+                        </form>
+                    </div>
+                    
+                    @endif
                 @endif
-                @endif
-                </div>
-            @endforeach
-        
-</div>
+            </div>
+        @endforeach    
+    </div>
 </article>
