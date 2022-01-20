@@ -2,18 +2,13 @@
 
 namespace App\Events;
 
-use App\Models\Notification;
-use App\Models\NotificationComment;
-use App\Models\NotificationLikePost;
-use App\Models\NotificationLikeComment;
-use App\Models\NotificationMessage;
-use App\Models\NotificationReplyComment;
-use App\Models\NotificationTagComment;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\View\View;
+use App\Models\Notification;
 
 class NotificationUpdate implements ShouldBroadcast
 {
@@ -27,7 +22,11 @@ class NotificationUpdate implements ShouldBroadcast
     }
 
     public function broadcastWith(){
-        return (array)$this->notification->specific();
+        $spec = $this->notification->specific();
+        $arr = (array)$spec;
+        $arr['html'] = view('partials.notificationsSingle', ['notification' => $spec])->render();
+        $arr['html'] = substr($arr['html'],0,strrpos($arr['html'],">",-1)+1);
+        return $arr;
     }
 
     public function broadcastOn()

@@ -48,7 +48,9 @@
           <div class="grid-menu-item">
             <div class="corner-grid"><div id="notification-tab">
               <i class="fas fa-bell"></i>
-              @include('partials.notifications', ['notifications'=> Auth::user()->notifications()->orderBy('id','desc')->limit(10)->get()])
+              <div class="notifications tab-closed">
+                @include('partials.notifications', ['notifications'=> Auth::user()->notifications()->orderBy('id','desc')->limit(10)->get()])
+              </div>
             </div>
           </div>
           </div>

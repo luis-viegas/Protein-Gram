@@ -178,9 +178,9 @@ class User extends Authenticatable
     public function removeFriend($friend_id)
     {   
         return DB::table('relationships')
-            ->where('id1',$friend_id<$this->id ? $friend_id : $this->id)
-            ->where('id2',$friend_id>$this->id ? $friend_id : $this->id)
-            ->update(['friends'=>False]);
+            ->where('id1', $friend_id < $this->id ? $friend_id : $this->id)
+            ->where('id2', $friend_id > $this->id ? $friend_id : $this->id)
+            ->update(['friends'=>'false']);
     }
     public function makeFriendRequest($friend_id)
     {
@@ -192,16 +192,16 @@ class User extends Authenticatable
         {
             DB::table('friend_requests')
                 ->insertOrIgnore([
-                    'id1'=>$this->id,
-                    'id2'=>$friend_id
+                    'id1' => $this->id,
+                    'id2' => $friend_id
                 ]);
         }else{
             $this->removeFriendRequest($friend_id);
             DB::table('relationships')
-                ->updateOrInsert(
-                    ['id1'=>$friend_id<$this->id?:$this->id,
-                        'id2'=>$friend_id>$this->id?:$this->id],
-                    ['friends'=>True]);
+                ->updateOrInsert([
+                    'id1' => $friend_id < $this->id ? $friend_id : $this->id,
+                    'id2' => $friend_id > $this->id ? $friend_id : $this->id
+                ],['friends'=>'true']);
         }
     }
     public function removeFriendRequest($friend_id)

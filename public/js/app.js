@@ -96,6 +96,9 @@ if(user_icon != undefined){
     let channel = pusher.subscribe('notification' + user_id);
     channel.bind('notification_update', function(data){
         console.log(data);
+        //var notifBell = document.getElementsByClassName("fa-bell")[0];
+        var notifTab = document.getElementsByClassName("notifications")[0];
+        notifTab.innerHTML= notifTab.innerHTML.concat(data['html']);
     });
 }
 
