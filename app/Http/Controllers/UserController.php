@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Message;
+use App\Models\Notification;
+use App\Models\NotificationFriendRequest;
+use App\Models\NotificationFriend;
 use App\Models\User;
 
 use Illuminate\Http\Request;
@@ -111,7 +113,21 @@ class UserController extends Controller
     public function createFriendRequest(Request $request){
         $user = Auth::user();
         if($user){
-            $user->makeFriendRequest($request->input("friend_request_id"));
+            $result= $user->makeFriendRequest($request->input("friend_request_id"));
+            if($result == 'sent' || $result == 'friends'){
+                $notification = new Notification();
+                $notification->user_id = $request->input("friend_request_id");
+                $notification->type = ($result == 'sent' ? 'friend_request' : 'friend');
+                $notification->save();
+                $notification_specific = ($result == 'sent' ? new NotificationFriendRequest() : new NotificationFriend());
+                $notification_specific->notification_id=$notification->id;
+                $notification_specific->user_id=$user->id;
+                $notification_specific->save();
+                $notification->broadcast();
+            }
+            if($result == 'friends'){
+                DB::delete('delete from notifications where user_id = ? AND id IN (SELECT notification_id from notifications_friend_request WHERE user_id = ?)',[$user->id,$request->input("friend_request_id")]);
+            }
         }
         return redirect()->back();
     }
@@ -119,7 +135,10 @@ class UserController extends Controller
     public function removeFriendRequest(Request $request){
         $user = Auth::user();
         if($user){
-            $user->removeFriendRequest($request->input("friend_request_id"));
+            $result = $user->removeFriendRequest($request->input("friend_request_id"));
+            if($result == 'deleted'){
+                DB::delete('delete from notifications where user_id = ? AND id IN (SELECT notification_id from notifications_friend_request WHERE user_id = ?)',[$user->id,$request->input("friend_request_id")]);
+            }
         }
         return redirect()->back();
     }
@@ -127,7 +146,11 @@ class UserController extends Controller
     public function removeFriend(Request $request){
         $user = Auth::user();
         if($user){
-            $user->removeFriend($request->input("friend_id"));
+            $result = $user->removeFriend($request->input("friend_id"));
+            if($result == 'deleted'){
+                DB::delete('delete from notifications where user_id = ? AND id IN (SELECT notification_id from notifications_friend WHERE user_id = ?)',[$user->id,$request->input("friend_request_id")]);
+                DB::delete('delete from notifications where user_id = ? AND id IN (SELECT notification_id from notifications_friend WHERE user_id = ?)',[$request->input("friend_request_id"),$user->id]);
+            }
         }
         return redirect()->back();
     }

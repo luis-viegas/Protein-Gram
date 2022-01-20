@@ -18,5 +18,11 @@
         @case('comment_reply')
             <div class="notification" notification_id="{{$notification->id}}">{{$notification->name}} has replied to your comment.</div>
         @break
+        @case('friend_request')
+            <div class="notification" notification_id="{{$notification->id}}">{{$notification->name}} has sent you a friend request.</div>
+        @break
+        @case('friend')
+            <div class="notification" notification_id="{{$notification->id}}">{{$notification->name}} has accepted your friend request.</div>
+        @break
     @endswitch
 @endif

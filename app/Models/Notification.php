@@ -56,6 +56,14 @@ class Notification extends Model
                 $arr = DB::select('SELECT v.id, type, v.created_at, user_id, comment_id, post_id, name, image FROM (SELECT * FROM (VALUES (?::int, \'comment_reply\', ?::timestamptz)) as v (id, type, created_at)) as v INNER JOIN notifications_comment_reply ON id = notification_id INNER JOIN comments ON notifications_comment_reply.comment_id = comments.id INNER JOIN users ON comments.user_id = users.id', [$this->id,$this->created_at]);
                 return empty($arr)? null : $arr[0];
                 // notification:(id, type, created_at) comment:(comment_id, post_id) commenter:(user_id, name, image)
+            case 'friend_request':
+                $arr = DB::select('SELECT v.id, type, v.created_at, users.id as user_id, name, image FROM (SELECT * FROM (VALUES (?::int, \'friend_request\', ?::timestamptz)) as v (id, type, created_at)) as v INNER JOIN notifications_friend_request ON id = notification_id INNER JOIN users ON notifications_friend_request.user_id = users.id', [$this->id,$this->created_at]);
+                return empty($arr)? null : $arr[0];
+                // notification:(id, type, created_at) sender:(user_id, name, image)
+            case 'friend':
+                $arr = DB::select('SELECT v.id, type, v.created_at, users.id as user_id, name, image FROM (SELECT * FROM (VALUES (?::int, \'friend\', ?::timestamptz)) as v (id, type, created_at)) as v INNER JOIN notifications_friend ON id = notification_id INNER JOIN users ON notifications_friend.user_id = users.id', [$this->id,$this->created_at]);
+                return empty($arr)? null : $arr[0];
+                // notification:(id, type, created_at) friend:(user_id, name, image)
         }
     }
 }

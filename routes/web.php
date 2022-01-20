@@ -41,8 +41,6 @@ Route::get('users/{id}', 'UserController@show')->name('show_user');  //view prof
 
 //Comment
 Route::post('comments', 'CommentController@create')->name('create_comment');
-//Route::post('posts/{id}/comments', 'CommentController@create')->name('create_comment');
-//Route::post('posts/{post_id}/comments/{comment_id}/responses','CommentController@createResponse')->name('create_response');
 
 //Friend Requests
 Route::get('users/{id}/friends', 'UserController@friends')->name('friends');
