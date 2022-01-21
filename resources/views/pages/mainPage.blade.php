@@ -10,7 +10,9 @@
   @endif
   @foreach ($posts as $post )
     @if($post->poster->is_private==false || (Auth::check() && ( Auth::user()->is_admin || $post->user_id == Auth::id() || Auth::user()->isFriend($post->poster_id))) )
+    @if( $post->group_id == null)
       @include('partials.post', ['post'=> $post])
+    @endif
     @endif
   @endforeach
 </section>

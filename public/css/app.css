@@ -378,11 +378,13 @@ input[type="password"]:focus {
   background-color: #e5e5e5;
 }
 
-#friends_list, #friend-requests {
+#friends_list,
+#friend-requests {
   display: flex;
 }
 
-.friend-card, .friend-request-card {
+.friend-card,
+.friend-request-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -394,14 +396,16 @@ input[type="password"]:focus {
   width: 200px;
 }
 
-.friend-card img, .friend-request-card img{
+.friend-card img,
+.friend-request-card img {
   margin: 0;
   border-radius: 10px;
   width: 80%;
   height: 80px;
 }
 
-.friend-card a, .friend-request-card a{
+.friend-card a,
+.friend-request-card a {
   color: black;
   font-family: "Spartan", sans-serif;
   padding: 10px 0;
@@ -421,7 +425,7 @@ input[type="password"]:focus {
   height: calc(100vh - 160px);
 }
 
-.contacts-list{
+.contacts-list {
   width: 30%;
   max-height: calc(100vh - 125px);
   overflow: auto;
@@ -441,7 +445,7 @@ input[type="password"]:focus {
   flex-direction: column;
   padding: 20px;
   max-height: calc(100vh - 125px);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 300;
   justify-content: space-between;
 }
@@ -466,7 +470,7 @@ input[type="password"]:focus {
 }
 
 .fa-arrow-circle-right {
-  color: #4357AD;
+  color: #4357ad;
   font-size: 30px;
   margin-top: 5px;
 }
@@ -474,7 +478,6 @@ input[type="password"]:focus {
 .fa-arrow-circle-right:hover {
   color: grey;
 }
-
 
 .contact {
   display: flex;
@@ -520,16 +523,15 @@ input[type="password"]:focus {
   flex-direction: column;
 }
 
-.user-short-links a{
+.user-short-links a {
   color: black;
   margin: 10px;
   cursor: pointer;
 }
 
-.user-short-links a:hover{
+.user-short-links a:hover {
   color: grey;
 }
-
 
 .invisible-button {
   display: none;
@@ -559,7 +561,6 @@ input[type="password"]:focus {
   color: grey;
   font-size: 30px;
 }
-
 
 @media (max-width: 768px) {
   #logo-div {
@@ -617,8 +618,20 @@ input[type="password"]:focus {
     padding: 0;
   }
 
-
   .expand-contact-list {
     width: 100%;
   }
+}
+
+.fixed-buttons {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  z-index: 500;
+  justify-content: end;
+}
+
+.fixed-buttons a {
+  margin-left: 20px;
 }

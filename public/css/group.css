@@ -13,19 +13,17 @@
 }
 
 .users-grid {
-  width: 70%;
-  margin-left: 15%;
+  width: 80%;
+  margin-left: 10%;
 }
 
 .users-grid ul {
-  display: flex;
-  flex-wrap: wrap;
-  padding-left: 0;
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
 }
 
 .users-grid ul li {
   list-style: none;
-  flex: 0 0 33.333333%;
 }
 
 .grid-image {
@@ -34,4 +32,40 @@
 
 .group-creation {
   width: 50%;
+}
+
+.grid-button {
+  width: 90%;
+  font-size: 0.6em;
+  padding: 0;
+}
+
+.owner {
+  background-color: rgb(170, 170, 170);
+  border: 0.1rem solid rgb(170, 170, 170);
+}
+
+.owner:hover {
+  background-color: rgb(170, 170, 170);
+  border: 0.1rem solid rgb(170, 170, 170);
+  cursor: default;
+}
+
+.owner:focus {
+  background-color: rgb(170, 170, 170);
+  border: 0.1rem solid rgb(170, 170, 170);
+  cursor: default;
+}
+
+#rename-group-input {
+  width: 50%;
+}
+
+#group-delete-button {
+  background-color: rgb(230, 52, 52);
+  border: none;
+}
+
+.no-dots {
+  list-style: none;
 }
