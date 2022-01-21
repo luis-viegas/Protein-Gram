@@ -51,6 +51,12 @@
               <i class="fas fa-bell"></i>
               <div class="notifications tab-closed">
                 @include('partials.notifications', ['notifications'=> Auth::user()->notifications()->orderBy('id','desc')->limit(10)->get()])
+                @if(Auth::user()->notifications()->count() == 0)
+                <div class="no-notifications">
+                NO NOTIFICATIONS
+                </div>
+                
+                @endif
               </div>
             </div>
           </div>
@@ -64,14 +70,23 @@
               <a id="profile-icon-link" href="{{ url('/users/'.Auth::user()->id) }}">
                 <img id='profile-icon' src={{Auth::user()->image}}>
               </a>
-              
+
+              @if (Auth::user()->is_admin)
+              <div class="profile-menu admin-menu" id="profile-menu">
+              <a id="logout-button" href="{{ url('/logout') }}"> LOGOUT </a>
+                <a href="{{ url('/users/edit/'.Auth::user()->id)}}"> SETTINGS </a>
+                <a id="admin-button" href="{{url('/administration')}}"> ADMINISTRATION </a>
+              </div>
+              @endif
+
+              @if (!(Auth::user()->is_admin))
               <div class="profile-menu" id="profile-menu">
               <a id="logout-button" href="{{ url('/logout') }}"> LOGOUT </a>
                 <a href="{{ url('/users/edit/'.Auth::user()->id)}}"> SETTINGS </a>
-              @if (Auth::user()->is_admin)
-                <a id="admin-button" href="{{url('/administration')}}"> ADMINISTRATION </a>
-              @endif
               </div>
+              @endif
+
+              
           </div>
 
             </div>

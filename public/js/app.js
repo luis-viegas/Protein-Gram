@@ -49,7 +49,15 @@ function addLike(){
     let likes = document.getElementById("like_n"+post_id);
 
     let new_likes = parseInt(likes.textContent ) + 1;
-    likes.textContent = new_likes;
+    var likesText;
+    if (new_likes == 1) {
+        likesText = " Like";
+    }
+    else {
+        likesText = " Likes";
+    }
+
+    likes.textContent = new_likes + likesText;
 
     document.getElementById('like_b'+ post_id).style.display='none';
 

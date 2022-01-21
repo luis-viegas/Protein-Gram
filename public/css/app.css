@@ -52,6 +52,7 @@ main > header span {
   top: 45px;
   min-width: 100px;
   max-width: 400px;
+  width: max-content;
   background-color: white;
   border-radius: 15px;
   padding: 20px;
@@ -65,6 +66,10 @@ main > header span {
   padding: 5px 0;
   border-bottom: 1px solid grey;
   color: black;
+}
+
+.no-notifications {
+  color: grey;
 }
 
 .timeline {
@@ -296,6 +301,17 @@ input[type="password"]:focus {
 }
 
 .profile-menu:after {
+  content: " ";
+  position: absolute;
+  right: 50px;
+  top: -15px;
+  border-top: none;
+  border-right: 15px solid transparent;
+  border-left: 15px solid transparent;
+  border-bottom: 15px solid white;
+}
+
+.admin-menu:after {
   content: " ";
   position: absolute;
   right: 85px;
@@ -536,6 +552,12 @@ input[type="password"]:focus {
 
 .contacts-menu {
   display: none;
+}
+
+.no-friends {
+  text-align: center;
+  color: grey;
+  font-size: 30px;
 }
 
 
