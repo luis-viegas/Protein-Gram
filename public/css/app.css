@@ -296,7 +296,7 @@ input[type="password"]:focus {
   font-family: "Spartan", sans-serif;
   width: fit-content;
   position: absolute;
-  top: 115px;
+  top: 140px;
   z-index: 100;
 }
 

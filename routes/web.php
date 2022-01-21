@@ -28,7 +28,7 @@ Route::post('posts/edit', 'PostController@update')->name('update_post');
 Route::post('users/{id]/posts/edit', 'PostController@update')->name('update_post_admin');
 Route::get('posts/{post_id}', 'PostController@show')->name('viewPost');
 Route::post('posts/{post_id}/like', 'PostController@like')->name('like_post');
-Route::post('posts/like', 'PostController@like')->name('like_post');
+Route::post('posts/like', 'PostController@like');
 
 //Search
 Route::any('search', 'SearchController@search');
@@ -47,7 +47,7 @@ Route::post('comments', 'CommentController@create')->name('create_comment');
 
 //Friend Requests
 Route::get('users/{id}/friends', 'UserController@friends')->name('friends');
-Route::get('friends', 'UserController@friends')->name('friends');
+Route::get('friends', 'UserController@friends');
 Route::post('friends/friend_requests','UserController@createFriendRequest')->name('create_friend_request');
 Route::post('friends/friend_requests/delete','UserController@removeFriendRequest')->name('remove_friend_request');
 Route::post('friends/delete','UserController@removeFriend')->name('remove_friend');
@@ -63,7 +63,7 @@ Route::post('messages/{chat_id}/send', 'ChatController@createMessage')->name('cr
 //Notifications
 Route::post('notifications/{last_id}','NotificationController@checkNew')->name('check_new_notifications');
 Route::post('notifications','NotificationController@get')->name('get_notifications');
-Route::get('notifications','NotificationController@get')->name('get_notifications');//TODO remove
+Route::get('notifications','NotificationController@get');//TODO remove
 Route::put('notifications/{last_id}','NotificationController@consume')->name('consume_notifications');
 
 //Groups

@@ -117,8 +117,10 @@
 
     <div class="fixed-buttons">
       <a class="button" href="/groups">Groups</a>
+      @if(Auth::check())
       <a class="button" href="{{route('messages_page')}}">Messages</a>
       <a class="button" href="users/{{Auth::user()->id}}/friends">Friends</a>
+      @endif
     </div> 
     </main>
   </body>
