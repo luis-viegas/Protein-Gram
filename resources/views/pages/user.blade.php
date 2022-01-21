@@ -49,7 +49,7 @@
           </div>
         </div>
         <div class='posts_item'>
-          @if (Auth::check() )
+          @if (Auth::check() && (Auth::user()->id == $user->id) )
           @include('partials.new_post')
           @endif
           <section class="profile-timeline" id="profile timeline">

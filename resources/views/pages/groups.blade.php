@@ -20,7 +20,15 @@
 @endif
 
 <h2>My groups:</h2>
-<p>To be done</p>
+<ul>
+@foreach ($groups as $group )
+    @if(Auth::user()->memberOfGroups()->find($group->id))
+    <li class="no-dots">
+        <a href="/groups/{{$group->id}}">{{$group->name}}</a>
+    </li>
+    @endif
+@endforeach
+</ul>
 
 <h2>All groups:</h2>
 <div>

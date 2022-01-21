@@ -107,6 +107,12 @@
       <section id="content">
         @yield('content')
       </section>
+
+    <div class="fixed-buttons">
+      <a class="button" href="/groups">Groups</a>
+      <a class="button" href="{{route('messages_page')}}">Messages</a>
+      <a class="button" href="users/{{Auth::user()->id}}/friends">Friends</a>
+    </div> 
     </main>
   </body>
 </html>

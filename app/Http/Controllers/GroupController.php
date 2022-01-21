@@ -76,4 +76,18 @@ class GroupController extends Controller
         return redirect()->route('groups_page', ['id' => Auth::user()->id]);
         
     }
+
+    public function promote(Request $request) {
+        $user = User::find($request->input('memberId'));
+        $group = Group::find($request->input('groupId'));
+        $group->owners()->attach($user->id);
+        return redirect()->back();
+    }
+
+    public function unpromote(Request $request) {
+        $user = User::find($request->input('memberId'));
+        $group = Group::find($request->input('groupId'));
+        $group->owners()->detach($user->id);
+        return redirect()->back();
+    }
 }

@@ -72,6 +72,8 @@ Route::post('groups/{id}', 'GroupController@delete')->name('deleteGroup');
 Route::post('groups/{id}/rename', 'GroupController@rename')->name('renameGroup');
 Route::post('groups/{id}/join', 'GroupController@join')->name('joinGroup');
 Route::post('groups/{id}/leave', 'GroupController@leave')->name('leaveGroup');
+Route::post('groups/{id}/promote', 'GroupController@promote')->name('promoteGroupOwner');
+Route::post('groups/{id}/unpromote', 'GroupController@unpromote')->name('unpromoteGroupOwner');
 
 //Administration
 Route::get('administration','UserController@listAdministration')->name('show_all_users');
