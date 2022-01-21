@@ -197,6 +197,31 @@ CLUSTER notifications USING user_notifications;
 
 
 -- Text Search
+ALTER TABLE posts ADD COLUMN tsvectors TSVECTOR;
+
+CREATE FUNCTION post_search_update() RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    NEW.tsvectors = (
+      setweight(to_tsvector('simple', NEW.text), 'A')
+    );
+  END IF;
+  IF TG_OP = 'UPDATE' THEN
+      IF (NEW.text <> OLD.text) THEN
+        NEW.tsvectors = (
+          setweight(to_tsvector('simple', NEW.text), 'A')
+        );
+      END IF;
+  END IF;
+  RETURN NEW;
+END $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER post_search_update
+  BEFORE INSERT OR UPDATE ON posts
+  FOR EACH ROW
+  EXECUTE PROCEDURE post_search_update();
+
 
 ALTER TABLE groups ADD COLUMN tsvectors TSVECTOR;
 

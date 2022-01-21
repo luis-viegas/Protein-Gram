@@ -28,9 +28,11 @@ Route::post('posts/edit', 'PostController@update')->name('update_post');
 Route::post('users/{id]/posts/edit', 'PostController@update')->name('update_post_admin');
 Route::get('posts/{post_id}', 'PostController@show')->name('viewPost');
 Route::post('posts/{post_id}/like', 'PostController@like')->name('like_post');
+Route::post('posts/like', 'PostController@like')->name('like_post');
 
 //Search
 Route::any('search', 'SearchController@search');
+Route::any('search/posts', 'SearchController@postSearch');
 
 //User
 //Route::put('users', 'UserController@create');
@@ -83,6 +85,10 @@ Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
 
+//Static
+Route::get('about',function(){
+    return view('pages.about');
+});
 
 
 

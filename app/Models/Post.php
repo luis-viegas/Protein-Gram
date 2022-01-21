@@ -40,4 +40,14 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class,'post_id','id');
     }
+
+    
+    public function scopeSearch($query, $search)
+    {
+        if (!$search) {
+            return $query;
+        }
+        return $query->whereRaw('tsvectors @@ plainto_tsquery(\'simple\', ?)', [$search])
+            ->orderByRaw('ts_rank( tsvectors, plainto_tsquery(\'simple\', ?)) DESC', [$search]);
+    }
 }

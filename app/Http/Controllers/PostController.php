@@ -90,10 +90,9 @@ class PostController extends Controller
     public function like(Request $request, $post_id = null){
         $user = Auth::user();
         if(!$user) return redirect()->back();
-        $post = $user->posts->find($post_id?:$request->input('id'));
+        $post = Post::find($post_id?:$request->input('id'));
         if(!$post)return redirect()->back();
         $post->likes()->attach($user->id, ['type' => 'LIKE']);
         return 0;
-
     }
 }

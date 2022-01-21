@@ -37,8 +37,15 @@
             <div id="search-wrapper">
               <form action="/search" method="POST" role="search" id="search-form">
                 {{ csrf_field() }}
-                <div class="seatch-bar">
+                <div class="search-bar">
                     <input type="text" class="search-bar-input" name="q" placeholder="Search users...">
+                        <button type="submit" class="btn-default">search</button>
+                </div>
+              </form>
+              <form action="/search/posts" method="POST" role="search" id="search-form">
+                {{ csrf_field() }}
+                <div class="search-bar">
+                    <input type="text" class="search-bar-input" name="q" placeholder="Search posts...">
                         <button type="submit" class="btn-default">search</button>
                 </div>
               </form>
